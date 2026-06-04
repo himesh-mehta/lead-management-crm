@@ -1,0 +1,37 @@
+{
+  "name": "leadflow-crm",
+  "version": "1.0.0",
+  "description": "LeadFlow CRM - Lead Management System REST API (Neon PostgreSQL + Drizzle ORM)",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "nodemon server/index.js",
+    "start": "node server/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crm",
+    "lead-management",
+    "express",
+    "neon",
+    "postgresql",
+    "drizzle-orm"
+  ],
+  "author": "Himesh Mehta",
+  "license": "ISC",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10",
+    "nodemon": "^3.1.14"
+  }
+}
