@@ -14,6 +14,7 @@ const getLeads = async (req, res) => {
       limit: parseInt(limit, 10),
       status: status || undefined,
       sort,
+      userId: req.user.id, // scope by authenticated user id
     });
 
     res.status(200).json({
@@ -36,7 +37,7 @@ const getLeads = async (req, res) => {
  */
 const getLead = async (req, res) => {
   try {
-    const lead = await Lead.findLeadById(req.params.id);
+    const lead = await Lead.findLeadById(req.params.id, req.user.id);
 
     if (!lead) {
       return res.status(404).json({ message: `Lead with id ${req.params.id} not found` });
@@ -57,7 +58,7 @@ const getLead = async (req, res) => {
  */
 const createLead = async (req, res) => {
   try {
-    const lead = await Lead.createLead(req.body);
+    const lead = await Lead.createLead(req.body, req.user.id);
     res.status(201).json({ message: 'Lead created successfully', lead });
   } catch (err) {
     console.error('[createLead]', err.message);
@@ -83,7 +84,7 @@ const createLead = async (req, res) => {
  */
 const updateLead = async (req, res) => {
   try {
-    const updated = await Lead.updateLeadById(req.params.id, req.body);
+    const updated = await Lead.updateLeadById(req.params.id, req.body, req.user.id);
 
     if (!updated) {
       return res.status(404).json({ message: `Lead with id ${req.params.id} not found` });
@@ -113,7 +114,7 @@ const updateLead = async (req, res) => {
  */
 const deleteLead = async (req, res) => {
   try {
-    const deleted = await Lead.deleteLeadById(req.params.id);
+    const deleted = await Lead.deleteLeadById(req.params.id, req.user.id);
 
     if (!deleted) {
       return res.status(404).json({ message: `Lead with id ${req.params.id} not found` });
@@ -139,7 +140,7 @@ const searchLeads = async (req, res) => {
       return res.status(400).json({ message: 'Search query param "q" is required' });
     }
 
-    const leads = await Lead.searchLeads(q);
+    const leads = await Lead.searchLeads(q, req.user.id);
     res.status(200).json({ leads, total: leads.length });
   } catch (err) {
     console.error('[searchLeads]', err.message);
@@ -155,7 +156,7 @@ const searchLeads = async (req, res) => {
 const getStats = async (req, res) => {
   try {
     const { timeframe, startDate, endDate } = req.query;
-    const stats = await Lead.getLeadStats({ timeframe, startDate, endDate });
+    const stats = await Lead.getLeadStats({ timeframe, startDate, endDate, userId: req.user.id });
     res.status(200).json({ stats });
   } catch (err) {
     console.error('[getStats]', err.message);

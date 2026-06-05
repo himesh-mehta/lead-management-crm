@@ -6,6 +6,8 @@ const cors = require('cors');
 
 const { initLeadsTable } = require('./models/Lead');
 const leadRoutes = require('./routes/leadRoutes');
+const authRoutes = require('./routes/authRoutes');
+const authMiddleware = require('./middleware/authMiddleware');
 const errorHandler = require('./middleware/errorHandler');
 
 // Initialize Express app
@@ -52,7 +54,8 @@ app.get('/health', (req, res) => {
 });
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-app.use('/api/leads', leadRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/leads', authMiddleware, leadRoutes);
 
 // ─── Production Mode: Static Assets ──────────────────────────────────────────
 if (process.env.NODE_ENV === 'production') {

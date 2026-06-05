@@ -8,7 +8,9 @@ import {
   Headphones,
   ChevronRight,
   ChevronLeft,
+  LogOut,
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -57,6 +59,18 @@ const getHeaderStyles = (title: string) => {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
+  const { user, logout } = useAuth();
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .filter(Boolean)
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
   return (
     <>
       {/* Mobile background overlay */}
@@ -137,17 +151,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           {isOpen ? (
             <div className="flex items-center gap-3 p-1">
               <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-extrabold flex items-center justify-center border border-indigo-200/30 text-xs flex-shrink-0">
-                HM
+                {getInitials(user?.name)}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-gray-800 dark:text-slate-200 truncate">
-                  Himesh Mehta
+                  {user?.name || 'LeadBridge User'}
                 </p>
                 <p className="text-[9px] text-gray-400 font-semibold truncate uppercase mt-0.5">
-                  Super Admin
+                  {user?.email || 'sales@leadbridge.com'}
                 </p>
               </div>
               
+              {/* Sign out button */}
+              <div className="relative group flex justify-center items-center">
+                <button 
+                  onClick={logout}
+                  className="flex p-1.5 rounded-lg text-red-500 hover:text-red-650 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
+                >
+                  <LogOut size={14} />
+                </button>
+                <div className="absolute bottom-9 scale-0 group-hover:scale-100 transition-all duration-150 origin-bottom bg-slate-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg whitespace-nowrap shadow-xl border border-slate-850 z-50 pointer-events-none">
+                  Sign Out
+                </div>
+              </div>
+
               {/* Desktop toggle collapse */}
               <div className="relative group flex justify-center items-center">
                 <button 
@@ -166,10 +193,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
               {/* Profile Avatar with Custom Tooltip */}
               <div className="relative group w-8 h-8 flex justify-center items-center">
                 <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-extrabold flex items-center justify-center border border-indigo-200/30 text-xs cursor-pointer hover:bg-indigo-200 dark:hover:bg-indigo-950 transition-colors">
-                  HM
+                  {getInitials(user?.name)}
                 </div>
                 <div className="absolute left-14 scale-0 group-hover:scale-100 transition-all duration-150 origin-left bg-slate-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg whitespace-nowrap shadow-xl border border-slate-850 z-50 pointer-events-none">
-                  Himesh Mehta (Super Admin)
+                  {user?.name || 'User'} ({user?.email})
+                </div>
+              </div>
+
+              {/* Sign out button (collapsed view) */}
+              <div className="relative group flex justify-center items-center">
+                <button 
+                  onClick={logout}
+                  className="flex p-1.5 rounded-lg text-red-500 hover:text-red-650 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
+                >
+                  <LogOut size={14} />
+                </button>
+                <div className="absolute left-14 scale-0 group-hover:scale-100 transition-all duration-150 origin-left bg-slate-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg whitespace-nowrap shadow-xl border border-slate-850 z-50 pointer-events-none">
+                  Sign Out
                 </div>
               </div>
               

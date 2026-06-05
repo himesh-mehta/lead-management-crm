@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 const { db } = require('../db');
-const { leads, leadActivities } = require('../db/schema');
+const { users, leads, leadActivities } = require('../db/schema');
 const { eq, ilike, or, and, sql, desc, asc } = require('drizzle-orm');
 
 // ─── Email Validation ─────────────────────────────────────────────────────────
@@ -10,6 +10,18 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const initLeadsTable = async () => {
   const client = await pool.connect();
   try {
+    // 1. Create users table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id          SERIAL PRIMARY KEY,
+        name        VARCHAR(255) NOT NULL,
+        email       VARCHAR(255) NOT NULL UNIQUE,
+        password    TEXT NOT NULL,
+        created_at  TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
+    // 2. Create leads table
     await client.query(`
       CREATE TABLE IF NOT EXISTS leads (
         id          SERIAL PRIMARY KEY,
@@ -27,11 +39,12 @@ const initLeadsTable = async () => {
       );
     `);
 
-    // Add source, gender and estimated_value columns if table already exists without them
+    // Add source, gender, estimated_value and user_id columns if table already exists without them
     await client.query(`
       ALTER TABLE leads ADD COLUMN IF NOT EXISTS source VARCHAR(100) DEFAULT 'Web';
       ALTER TABLE leads ADD COLUMN IF NOT EXISTS gender VARCHAR(50) DEFAULT 'Male';
       ALTER TABLE leads ADD COLUMN IF NOT EXISTS estimated_value INTEGER DEFAULT 0;
+      ALTER TABLE leads ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id);
     `);
 
     // Create lead_activities table
@@ -71,14 +84,14 @@ const initLeadsTable = async () => {
       $$;
     `);
 
-    console.log('✅ Leads table ready with source column');
+    console.log('✅ Leads and Users tables ready with user isolation columns');
   } finally {
     client.release();
   }
 };
 
 // ─── createLead ───────────────────────────────────────────────────────────────
-const createLead = async (data) => {
+const createLead = async (data, userId) => {
   const { name, email, phone, company, status = 'New', source = 'Web', notes = '', gender = 'Male', estimatedValue = 0 } = data;
 
   // Validate required fields
@@ -106,6 +119,7 @@ const createLead = async (data) => {
     notes,
     gender,
     estimatedValue: Number(estimatedValue) || 0,
+    userId: userId || null,
   }).returning();
 
   const createdLead = rows[0];
@@ -126,7 +140,7 @@ const createLead = async (data) => {
 };
 
 // ─── findAllLeads ─────────────────────────────────────────────────────────────
-const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at' } = {}) => {
+const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at', userId } = {}) => {
   const offset = (page - 1) * limit;
 
   // Whitelist sort columns
@@ -135,6 +149,9 @@ const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at' 
 
   // Build filters
   let conditions = [];
+  if (userId) {
+    conditions.push(eq(leads.userId, userId));
+  }
   if (status) {
     conditions.push(eq(leads.status, status));
   }
@@ -166,18 +183,23 @@ const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at' 
 };
 
 // ─── findLeadById ─────────────────────────────────────────────────────────────
-const findLeadById = async (id) => {
-  const rows = await db.select().from(leads).where(eq(leads.id, parseInt(id, 10)));
+const findLeadById = async (id, userId) => {
+  let condition = eq(leads.id, parseInt(id, 10));
+  if (userId) {
+    condition = and(condition, eq(leads.userId, userId));
+  }
+  const rows = await db.select().from(leads).where(condition);
   return rows[0] || null;
 };
 
 // ─── updateLeadById ───────────────────────────────────────────────────────────
-const updateLeadById = async (id, data) => {
+const updateLeadById = async (id, data, userId) => {
   const allowedFields = ['name', 'email', 'phone', 'company', 'status', 'source', 'notes', 'gender', 'estimatedValue'];
   const updateData = {};
 
   // Fetch current state for activity logging
-  const currentLead = await findLeadById(id);
+  const currentLead = await findLeadById(id, userId);
+  if (!currentLead) return null;
 
   for (const field of allowedFields) {
     if (data[field] !== undefined) {
@@ -205,7 +227,7 @@ const updateLeadById = async (id, data) => {
 
   const rows = await db.update(leads)
     .set(updateData)
-    .where(eq(leads.id, parseInt(id, 10)))
+    .where(and(eq(leads.id, parseInt(id, 10)), eq(leads.userId, userId)))
     .returning();
 
   const updatedLead = rows[0] || null;
@@ -239,33 +261,37 @@ const updateLeadById = async (id, data) => {
 };
 
 // ─── deleteLeadById ───────────────────────────────────────────────────────────
-const deleteLeadById = async (id) => {
+const deleteLeadById = async (id, userId) => {
   const rows = await db.delete(leads)
-    .where(eq(leads.id, parseInt(id, 10)))
+    .where(and(eq(leads.id, parseInt(id, 10)), eq(leads.userId, userId)))
     .returning();
   return rows[0] || null;
 };
 
 // ─── searchLeads ──────────────────────────────────────────────────────────────
-const searchLeads = async (q) => {
+const searchLeads = async (q, userId) => {
   if (!q || q.trim() === '') return [];
 
   const pattern = `%${q.trim()}%`;
+  
+  let searchCond = or(
+    ilike(leads.name, pattern),
+    ilike(leads.email, pattern),
+    ilike(leads.company, pattern),
+    ilike(leads.phone, pattern)
+  );
+
+  if (userId) {
+    searchCond = and(searchCond, eq(leads.userId, userId));
+  }
 
   return db.select().from(leads)
-    .where(
-      or(
-        ilike(leads.name, pattern),
-        ilike(leads.email, pattern),
-        ilike(leads.company, pattern),
-        ilike(leads.phone, pattern)
-      )
-    )
+    .where(searchCond)
     .orderBy(desc(leads.createdAt));
 };
 
 // ─── getLeadStats ─────────────────────────────────────────────────────────────
-const getLeadStats = async ({ timeframe = '30d', startDate, endDate } = {}) => {
+const getLeadStats = async ({ timeframe = '30d', startDate, endDate, userId } = {}) => {
   // Parsing date ranges
   let start = null;
   let end = new Date();
@@ -304,15 +330,38 @@ const getLeadStats = async ({ timeframe = '30d', startDate, endDate } = {}) => {
   }
 
   // Build where conditions
-  const currentRangeCond = and(
+  let currentRangeCond = and(
     sql`${leads.createdAt} >= ${start}`,
     sql`${leads.createdAt} <= ${end}`
   );
 
-  const prevRangeCond = and(
+  let prevRangeCond = and(
     sql`${leads.createdAt} >= ${prevStart}`,
     sql`${leads.createdAt} <= ${prevEnd}`
   );
+
+  if (userId) {
+    currentRangeCond = and(currentRangeCond, eq(leads.userId, userId));
+    prevRangeCond = and(prevRangeCond, eq(leads.userId, userId));
+  }
+
+  // Compile recent activities query with user scoping
+  let activitiesQuery = db.select({
+    id: leadActivities.id,
+    leadId: leadActivities.leadId,
+    leadName: leadActivities.leadName,
+    action: leadActivities.action,
+    details: leadActivities.details,
+    createdAt: leadActivities.createdAt
+  }).from(leadActivities);
+
+  if (userId) {
+    activitiesQuery = activitiesQuery
+      .innerJoin(leads, eq(leadActivities.leadId, leads.id))
+      .where(eq(leads.userId, userId));
+  }
+
+  activitiesQuery = activitiesQuery.orderBy(desc(leadActivities.createdAt)).limit(8);
 
   // Promise.all to fetch everything in parallel
   const [
@@ -362,7 +411,7 @@ const getLeadStats = async ({ timeframe = '30d', startDate, endDate } = {}) => {
     }).from(leads).where(currentRangeCond).groupBy(sql`to_char(${leads.createdAt}, 'YYYY-MM')`, leads.status),
 
     // Recent Activity
-    db.select().from(leadActivities).orderBy(desc(leadActivities.createdAt)).limit(8),
+    activitiesQuery,
 
     // Top Companies
     db.select({
@@ -525,6 +574,41 @@ const getLeadStats = async ({ timeframe = '30d', startDate, endDate } = {}) => {
   };
 };
 
+// ─── seedDemoLeads ────────────────────────────────────────────────────────────
+const seedDemoLeads = async (userId) => {
+  const demoLeads = [
+    { name: 'Sarah Johnson',     email: 'sarah.johnson@techcorp.io',    phone: '+1-415-555-0101', company: 'TechCorp Solutions',  status: 'Converted', source: 'Referral',     gender: 'Female', estimatedValue: 18500, notes: 'Closed Q1 deal. Exceptional ROI.', userId },
+    { name: 'Michael Chen',      email: 'mchen@globalventures.com',     phone: '+1-212-555-0182', company: 'Global Ventures',     status: 'Qualified',  source: 'Web',          gender: 'Male',   estimatedValue: 32000, notes: 'Decision maker confirmed. Budget approved.', userId },
+    { name: 'Priya Patel',       email: 'priya.p@innovateai.in',        phone: '+91-98-5551-0234', company: 'InnovateAI',         status: 'Contacted',  source: 'Cold-Call',    gender: 'Female', estimatedValue: 9800,  notes: 'Intro call done. Following up next week.', userId },
+    { name: 'James Whitmore',    email: 'jwhitmore@neonedge.co',        phone: '+44-20-5550-0311', company: 'NeonEdge Digital',   status: 'New',        source: 'Social Media', gender: 'Male',   estimatedValue: 5000,  notes: 'Signed up via LinkedIn ad.', userId },
+    { name: 'Emily Rodriguez',   email: 'emily.r@brightpath.com',       phone: '+1-305-555-0421', company: 'BrightPath LLC',     status: 'Lost',       source: 'Web',          gender: 'Female', estimatedValue: 0,     notes: 'Went with competitor. Price point issue.', userId },
+    { name: 'David Kim',         email: 'd.kim@fusionworks.kr',         phone: '+82-2-5550-0512', company: 'FusionWorks Korea',  status: 'Qualified',  source: 'Partner',      gender: 'Male',   estimatedValue: 47000, notes: 'Enterprise deal. Needs legal review.', userId },
+    { name: 'Aisha Nwosu',       email: 'aisha.n@crescenttech.ng',      phone: '+234-80-5550-0601', company: 'CrescentTech',     status: 'Contacted',  source: 'Referral',     gender: 'Female', estimatedValue: 12000, notes: 'Referred by David Kim. Very interested.', userId },
+    { name: 'Lucas Mendes',      email: 'lmendes@solarfluxbr.com',      phone: '+55-11-5550-0711', company: 'SolarFlux Brasil',  status: 'New',        source: 'Web',          gender: 'Male',   estimatedValue: 7500,  notes: 'Downloaded whitepaper. Potential upsell.', userId },
+    { name: 'Sophie Laurent',    email: 's.laurent@artisancrm.fr',      phone: '+33-1-5550-0821', company: 'Artisan CRM Paris',  status: 'Converted', source: 'Cold-Call',    gender: 'Female', estimatedValue: 22000, notes: 'Signed 12-month contract.', userId },
+    { name: 'Omar Al-Rashid',    email: 'omar.ar@pinnacleae.ae',        phone: '+971-4-5550-0911', company: 'Pinnacle UAE',      status: 'Qualified',  source: 'Social Media', gender: 'Male',   estimatedValue: 55000, notes: 'High-value prospect. Series B funded.', userId },
+    { name: 'Natalie Berg',      email: 'nberg@nordicsaas.se',          phone: '+46-8-5550-1012', company: 'Nordic SaaS AB',    status: 'Contacted',  source: 'Web',          gender: 'Female', estimatedValue: 14500, notes: 'Demo scheduled for next Thursday.', userId },
+    { name: 'Carlos Vega',       email: 'c.vega@deltamexgroup.mx',      phone: '+52-55-5550-1102', company: 'Delta Mex Group',   status: 'Lost',       source: 'Partner',      gender: 'Male',   estimatedValue: 0,     notes: 'Budget frozen for Q3. May revisit.', userId },
+    { name: 'Yuki Tanaka',       email: 'y.tanaka@nexusprojp.jp',       phone: '+81-3-5550-1211', company: 'Nexus Proj Japan',  status: 'New',        source: 'Referral',     gender: 'Female', estimatedValue: 8200,  notes: 'Highly recommended by existing client.', userId },
+    { name: 'Ryan O\'Brien',     email: 'robrien@velocityde.de',        phone: '+49-30-5550-1312', company: 'Velocity Digital',  status: 'Converted', source: 'Web',          gender: 'Male',   estimatedValue: 19800, notes: 'Fast close — 3 day sales cycle.', userId },
+    { name: 'Amara Diallo',      email: 'a.diallo@sahelagrosnl.nl',     phone: '+31-20-5550-1401', company: 'Sahel Agros BV',    status: 'Qualified',  source: 'Cold-Call',    gender: 'Female', estimatedValue: 28000, notes: 'Agriculture vertical. Strong fit.', userId },
+    { name: 'Ethan Moore',       email: 'ethan.m@clarkanalytics.us',    phone: '+1-737-555-1510', company: 'Clark Analytics',   status: 'Contacted',  source: 'Social Media', gender: 'Male',   estimatedValue: 11000, notes: 'Seen our webinar. Warm lead.', userId },
+    { name: 'Isabella Rossi',    email: 'i.rossi@terrafolioit.it',      phone: '+39-02-5550-1602', company: 'Terrafoglio Italia', status: 'New',       source: 'Web',          gender: 'Female', estimatedValue: 6500,  notes: 'Requested pricing info via contact form.', userId },
+    { name: 'Ben Okafor',        email: 'b.okafor@apexlogisticsgh.com', phone: '+233-20-5550-1701', company: 'Apex Logistics GH', status: 'Lost',     source: 'Partner',      gender: 'Male',   estimatedValue: 0,     notes: 'Chose in-house solution.', userId },
+    { name: 'Fiona Walsh',       email: 'fwalsh@greenleafie.ie',        phone: '+353-1-5550-1811', company: 'GreenLeaf Ireland', status: 'Contacted', source: 'Referral',     gender: 'Female', estimatedValue: 16000, notes: 'Second call scheduled. Strong interest.', userId },
+    { name: 'Arjun Sharma',      email: 'arjun.s@quantumspin.in',       phone: '+91-98-5551-1902', company: 'QuantumSpin Tech',  status: 'Qualified',  source: 'Web',          gender: 'Male',   estimatedValue: 39000, notes: 'CTO-level engagement. POC approved.', userId },
+  ];
+
+  // Insert only if demo account has no leads yet
+  const existing = await db.select({ count: sql`count(*)` }).from(leads).where(eq(leads.userId, userId));
+  const count = parseInt(existing[0]?.count || 0, 10);
+  if (count > 0) return; // Already seeded
+
+  for (const lead of demoLeads) {
+    await db.insert(leads).values(lead).onConflictDoNothing();
+  }
+};
+
 // ─── Exports ──────────────────────────────────────────────────────────────────
 module.exports = {
   initLeadsTable,
@@ -535,4 +619,6 @@ module.exports = {
   deleteLeadById,
   searchLeads,
   getLeadStats,
+  seedDemoLeads,
 };
+

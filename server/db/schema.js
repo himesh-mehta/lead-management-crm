@@ -1,5 +1,14 @@
 const { pgTable, serial, text, varchar, timestamp, integer } = require('drizzle-orm/pg-core');
 
+// ─── Users Table ──────────────────────────────────────────────────────────────
+const users = pgTable('users', {
+  id:        serial('id').primaryKey(),
+  name:      varchar('name', { length: 255 }).notNull(),
+  email:     varchar('email', { length: 255 }).notNull().unique(),
+  password:  text('password').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 // ─── Leads Table ──────────────────────────────────────────────────────────────
 const leads = pgTable('leads', {
   id:             serial('id').primaryKey(),
@@ -12,6 +21,7 @@ const leads = pgTable('leads', {
   notes:          text('notes').default(''),
   gender:         varchar('gender', { length: 50 }).default('Male'),
   estimatedValue: integer('estimated_value').default(0),
+  userId:         integer('user_id').references(() => users.id),
   createdAt:      timestamp('created_at').defaultNow(),
   updatedAt:      timestamp('updated_at').defaultNow(),
 });
@@ -27,5 +37,5 @@ const leadActivities = pgTable('lead_activities', {
 });
 
 // ─── Export ───────────────────────────────────────────────────────────────────
-module.exports = { leads, leadActivities };
+module.exports = { users, leads, leadActivities };
 

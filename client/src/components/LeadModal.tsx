@@ -99,19 +99,19 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-8 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
       {/* Backdrop overlay */}
       <div 
-        className="fixed inset-0 bg-slate-955/60 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Modal Box Container */}
-      <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-gray-150 animate-scale-in flex flex-col my-4">
+      <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-gray-150 animate-scale-in flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-            {initialData ? 'Edit Lead Record' : 'Add New Prospect'}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
+          <h2 className="text-base font-semibold text-gray-900">
+            {initialData ? 'Edit Lead' : 'Add New Lead'}
           </h2>
           <button
             onClick={onClose}
@@ -122,7 +122,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
         </div>
 
         {/* Scrollable Form contents */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto flex-1">
           {/* Full Name */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400 mb-1.5">
@@ -258,11 +258,11 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                 onBlur={() => setFocusedField('')}
                 className="crm-select w-full"
               >
+                <option value="New">New</option>
                 <option value="Contacted">Contacted</option>
+                <option value="Qualified">Qualified</option>
                 <option value="Converted">Converted</option>
                 <option value="Lost">Lost</option>
-                <option value="New">New</option>
-                <option value="Qualified">Qualified</option>
               </select>
             </div>
 
@@ -362,8 +362,8 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
             </div>
           </div>
 
-          {/* Footer controls inside modal */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-slate-800">
+          {/* Footer controls — sticky at modal bottom */}
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 flex-shrink-0">
             <button
               type="button"
               onClick={onClose}
