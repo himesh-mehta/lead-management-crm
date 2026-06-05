@@ -10,6 +10,7 @@ export interface Lead {
   source?: string | null;
   notes?: string | null;
   gender?: 'Male' | 'Female' | null;
+  estimatedValue?: number | null;
   createdAt: string;
   updatedAt?: string | null;
 }

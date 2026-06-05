@@ -154,7 +154,8 @@ const searchLeads = async (req, res) => {
  */
 const getStats = async (req, res) => {
   try {
-    const stats = await Lead.getLeadStats();
+    const { timeframe, startDate, endDate } = req.query;
+    const stats = await Lead.getLeadStats({ timeframe, startDate, endDate });
     res.status(200).json({ stats });
   } catch (err) {
     console.error('[getStats]', err.message);

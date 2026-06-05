@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Loader2, User, Mail, Phone, Building2, Tag, FileText, Globe } from 'lucide-react';
+import { X, Loader2, User, Mail, Phone, Building2, Tag, FileText, Globe, DollarSign } from 'lucide-react';
 import { Lead, LeadStatus } from '../types';
 
 interface LeadModalProps {
@@ -20,6 +20,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
     source: 'Web',
     notes: '',
     gender: 'Male' as 'Male' | 'Female',
+    estimatedValue: 0,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -36,6 +37,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
         source: initialData.source || 'Web',
         notes: initialData.notes || '',
         gender: (initialData.gender as 'Male' | 'Female') || 'Male',
+        estimatedValue: initialData.estimatedValue || 0,
       });
     } else {
       setFormData({
@@ -47,6 +49,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
         source: 'Web',
         notes: '',
         gender: 'Male',
+        estimatedValue: 0,
       });
     }
     setErrors({});
@@ -302,6 +305,34 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
               </select>
+            </div>
+          </div>
+
+          {/* Estimated Value */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
+              <DollarSign size={12} />
+              Estimated Deal Value ($)
+            </label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <DollarSign size={16} />
+              </span>
+              <input
+                type="number"
+                name="estimatedValue"
+                value={formData.estimatedValue}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('estimatedValue')}
+                onBlur={() => setFocusedField('')}
+                placeholder="e.g. 5000"
+                min="0"
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-xs transition-all focus:outline-none focus:ring-2 dark:text-white ${
+                  focusedField === 'estimatedValue'
+                    ? 'border-indigo-500 focus:ring-indigo-500/20'
+                    : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
+                }`}
+              />
             </div>
           </div>
 

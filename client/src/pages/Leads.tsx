@@ -197,19 +197,18 @@ const Leads: React.FC = () => {
           </p>
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => {
             setEditLead(null);
             setModalOpen(true);
           }}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white rounded-xl self-start sm:self-center transition-all active:scale-[0.98] shadow-md"
-          style={{ backgroundColor: '#ff7a59' }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e5431c')}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff7a59')}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white rounded-xl self-start sm:self-center transition-colors shadow-md bg-[#ff7a59] hover:bg-[#e5431c]"
         >
           <Plus size={15} />
           <span>Add Lead</span>
-        </button>
+        </motion.button>
       </div>
 
       {leads.length === 0 && searchTerm === '' && statusFilter === '' && !isLoading ? (

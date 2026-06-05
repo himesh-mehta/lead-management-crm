@@ -20,10 +20,10 @@ export const useLeadDetailsQuery = (id: number | string | undefined) => {
   });
 };
 
-export const useStatsQuery = () => {
+export const useStatsQuery = (params?: { timeframe?: string; startDate?: string; endDate?: string }) => {
   return useQuery({
-    queryKey: ['stats'],
-    queryFn: getStats,
+    queryKey: ['stats', params],
+    queryFn: () => getStats(params),
     staleTime: 10000,
   });
 };

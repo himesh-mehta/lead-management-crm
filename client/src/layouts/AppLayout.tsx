@@ -32,6 +32,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, onAddLeadClick }) => {
       {/* Sticky top navbar spanning full width */}
       <Navbar 
         onAddLeadClick={onAddLeadClick} 
+        toggleSidebar={toggleSidebar}
+        sidebarOpen={sidebarOpen}
       />
 
       <div className="flex flex-1 overflow-hidden relative bg-[#253342] dark:bg-slate-950">

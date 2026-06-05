@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Lead, LeadsResponse, LeadStats, QueryParams } from '../types';
+import { Lead, LeadsResponse, QueryParams } from '../types';
 
 const api = axios.create({
   baseURL: (import.meta.env.VITE_API_URL as string) || 'http://localhost:5000/api',
@@ -38,8 +38,8 @@ export const searchLeads = async (q: string): Promise<{ leads: Lead[]; total: nu
   return response.data;
 };
 
-export const getStats = async (): Promise<{ stats: LeadStats }> => {
-  const response = await api.get('/leads/stats');
+export const getStats = async (params?: { timeframe?: string; startDate?: string; endDate?: string }): Promise<{ stats: any }> => {
+  const response = await api.get('/leads/stats', { params });
   return response.data;
 };
 
