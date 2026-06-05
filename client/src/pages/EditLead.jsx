@@ -54,51 +54,99 @@ const EditLead = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate('/leads')}
-          className="p-2 text-slate-400 hover:text-slate-100 bg-slate-800 border border-slate-700 rounded-lg transition-colors hover:bg-slate-700"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-100">Edit Lead</h1>
-          <p className="text-sm text-slate-400">Modify properties or pipeline position of the lead</p>
-        </div>
-      </div>
-
-      {loading ? (
-        <div className="bg-slate-800 border border-slate-700 p-8 rounded-xl">
-          <LoadingSkeleton rows={5} />
-        </div>
-      ) : notFound ? (
-        <div className="bg-slate-800 border border-slate-750 p-8 rounded-xl flex flex-col items-center justify-center text-center">
-          <div className="p-3 rounded-full bg-red-500/10 text-red-400 mb-4 animate-bounce">
-            <AlertCircle size={32} />
+    <div style={{ background: '#FAFAFA', minHeight: '100vh', padding: '24px 20px' }}>
+      <div style={{ maxWidth: 768, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        
+        {/* Breadcrumbs & Header */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#888888' }}>
+            <span style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Dashboard</span>
+            <span>/</span>
+            <span style={{ cursor: 'pointer' }} onClick={() => navigate('/leads')}>Leads</span>
+            <span>/</span>
+            <span style={{ color: '#000000', fontWeight: 500 }}>Edit</span>
           </div>
-          <h3 className="text-lg font-bold text-slate-100">Lead Not Found</h3>
-          <p className="text-slate-450 mt-2 max-w-md">
-            The lead you are looking for might have been deleted, or the identifier is incorrect.
-          </p>
-          <button
-            onClick={() => navigate('/leads')}
-            className="mt-6 px-5 py-2.5 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-655 font-semibold text-sm transition-colors"
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+            <button
+              onClick={() => navigate('/leads')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#888888',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                padding: 4,
+              }}
+              className="hover:text-[#000000]"
+            >
+              <ArrowLeft size={16} />
+            </button>
+            <h1 style={{ fontSize: 16, fontWeight: 700, color: '#000000', margin: 0 }}>Edit Lead</h1>
+          </div>
+        </div>
+
+        {loading ? (
+          <div style={{ background: '#FFFFFF', border: '1px solid #E5E5E5', borderRadius: 4, padding: 24 }}>
+            <LoadingSkeleton rows={5} />
+          </div>
+        ) : notFound ? (
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E5E5E5',
+              borderRadius: 4,
+              padding: 32,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textCenter: 'center',
+            }}
           >
-            Back to Leads
-          </button>
-        </div>
-      ) : (
-        <div className="mt-4">
-          <LeadForm
-            initialData={lead}
-            onSubmit={handleSubmit}
-            onCancel={() => navigate('/leads')}
-            loading={submitting}
-          />
-        </div>
-      )}
+            <div
+              style={{
+                padding: 12,
+                borderRadius: '50%',
+                background: '#F3F3F3',
+                color: '#000000',
+                marginBottom: 16,
+                border: '1px solid #E5E5E5',
+              }}
+            >
+              <AlertCircle size={32} />
+            </div>
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: '#000000', margin: '0 0 8px 0' }}>Lead Not Found</h3>
+            <p style={{ fontSize: 13, color: '#888888', margin: '0 0 20px 0', maxWidth: 400, textAlign: 'center' }}>
+              The lead you are looking for might have been deleted, or the identifier is incorrect.
+            </p>
+            <button
+              onClick={() => navigate('/leads')}
+              style={{
+                padding: '8px 16px',
+                background: '#FAFAFA',
+                border: '1px solid #E5E5E5',
+                borderRadius: 4,
+                color: '#000000',
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: 'pointer',
+              }}
+            >
+              Back to Leads
+            </button>
+          </div>
+        ) : (
+          <div>
+            <LeadForm
+              initialData={lead}
+              onSubmit={handleSubmit}
+              onCancel={() => navigate('/leads')}
+              loading={submitting}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

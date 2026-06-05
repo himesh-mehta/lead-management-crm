@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
@@ -9,13 +9,14 @@ import Leads from './pages/Leads';
 import AddLead from './pages/AddLead';
 import EditLead from './pages/EditLead';
 import Stats from './pages/Stats';
+import Customers from './pages/Customers';
+import Settings from './pages/Settings';
 import NotFound from './pages/NotFound';
-
-const SIDEBAR_W = 256; // px — matches w-64
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const [pageTitle, setPageTitle] = useState('Dashboard');
 
   const toggleSidebar = () => setSidebarOpen(v => !v);
@@ -23,6 +24,16 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  // Load persisted theme at application startup
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
 
   useEffect(() => {
     const path = location.pathname;
@@ -32,25 +43,28 @@ function App() {
     else if (path.startsWith('/leads/edit')) t = 'Edit Lead';
     else if (path.startsWith('/leads')) t = 'Leads Directory';
     else if (path.startsWith('/stats') || path.startsWith('/statistics')) t = 'Pipeline Analytics';
+    else if (path.startsWith('/customers')) t = 'Converted Customers';
+    else if (path.startsWith('/settings')) t = 'System Settings';
     else t = 'LeadFlow CRM';
     setPageTitle(t);
     document.title = `${t} | LeadFlow CRM`;
   }, [location]);
 
   const isNotFound =
-    !['/', '/leads', '/leads/add', '/add-lead', '/statistics', '/stats'].includes(
+    !['/', '/leads', '/leads/add', '/add-lead', '/statistics', '/stats', '/customers', '/settings'].includes(
       location.pathname
     ) && !location.pathname.startsWith('/leads/edit/');
 
   const toastOptions = {
     duration: 3500,
     style: {
-      background: '#ffffff',
-      color: '#0F172A',
-      border: '1px solid #E2E8F0',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-      borderRadius: 10,
-      fontSize: 14,
+      background: 'rgba(17, 24, 39, 0.95)',
+      color: '#ffffff',
+      border: '1px solid rgba(255,255,255,0.05)',
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      borderRadius: '12px',
+      fontSize: '13px',
+      backdropFilter: 'blur(8px)',
     },
   };
 
@@ -66,34 +80,21 @@ function App() {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-        overflow: 'hidden',
-        background: '#F8FAFC',
-      }}
-    >
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100 transition-colors duration-300">
       {/* ── Fixed sidebar ── */}
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
       {/* ── Main area pushed right of sidebar on md+ ── */}
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100vh',
-          overflow: 'hidden',
-          minWidth: 0,
-        }}
-        className="md:ml-64"
-      >
+      <div className="flex-1 flex flex-col h-screen overflow-hidden min-w-0 md:ml-64">
         {/* Sticky navbar */}
-        <Navbar title={pageTitle} toggleSidebar={toggleSidebar} />
+        <Navbar 
+          title={pageTitle} 
+          toggleSidebar={toggleSidebar} 
+          onAddLeadClick={() => navigate('/leads?add=true')} 
+        />
 
         {/* Scrollable content */}
-        <main style={{ flex: 1, overflowY: 'auto', background: '#F8FAFC' }}>
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-950">
           <Routes>
             <Route path="/"               element={<Dashboard />} />
             <Route path="/leads"          element={<Leads />} />
@@ -102,6 +103,8 @@ function App() {
             <Route path="/leads/edit/:id" element={<EditLead />} />
             <Route path="/statistics"     element={<Stats />} />
             <Route path="/stats"          element={<Stats />} />
+            <Route path="/customers"      element={<Customers />} />
+            <Route path="/settings"       element={<Settings />} />
             <Route path="*"              element={<NotFound />} />
           </Routes>
         </main>

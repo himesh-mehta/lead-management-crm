@@ -1,151 +1,126 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, UserPlus, BarChart2, X } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  Building2,
+  BarChart3,
+  Settings,
+  X,
+  ShieldCheck,
+  ChevronRight,
+} from 'lucide-react';
 
-const navItems = [
-  { name: 'Dashboard',  path: '/',           icon: LayoutDashboard, end: true  },
-  { name: 'All Leads',  path: '/leads',       icon: Users,           end: false },
-  { name: 'Add Lead',   path: '/add-lead',    icon: UserPlus,        end: false },
-  { name: 'Statistics', path: '/statistics',  icon: BarChart2,       end: false },
+const sections = [
+  {
+    title: 'Workspace',
+    items: [
+      { name: 'Dashboard', path: '/', icon: LayoutDashboard, end: true },
+      { name: 'Leads Directory', path: '/leads', icon: Users, end: false },
+      { name: 'Converted Customers', path: '/customers', icon: ShieldCheck, end: false },
+      { name: 'Pipeline Analytics', path: '/stats', icon: BarChart3, end: false },
+    ]
+  },
+  {
+    title: 'Management',
+    items: [
+      { name: 'System Settings', path: '/settings', icon: Settings, end: false },
+    ]
+  }
 ];
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <>
-      {/* Mobile overlay */}
+      {/* Mobile background overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/30 md:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm md:hidden transition-opacity duration-300"
           onClick={toggleSidebar}
         />
       )}
 
-      {/* Sidebar panel */}
+      {/* Sidebar sidebar container */}
       <aside
-        style={{
-          width: 256,
-          background: '#FFFFFF',
-          borderRight: '1px solid #E2E8F0',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 30,
-          transform: isOpen ? 'translateX(0)' : undefined,
-          transition: 'transform 0.25s ease',
-        }}
-        className={`md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+        style={{ width: 260 }}
+        className={`fixed top-0 bottom-0 left-0 z-55 flex flex-col h-full glass-sidebar transition-transform duration-300 ease-in-out md:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
-        {/* ── Logo ── */}
-        <div
-          style={{
-            padding: '24px 20px',
-            borderBottom: '1px solid #F1F5F9',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {/* Logo box */}
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                background: '#4F46E5',
-                borderRadius: 8,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 16, lineHeight: 1 }}>
-                L
-              </span>
+        {/* Header Branding */}
+        <div className="h-16 px-6 border-b border-gray-200/60 dark:border-slate-800/60 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 shadow-md shadow-indigo-600/20 flex items-center justify-center text-white font-extrabold text-sm tracking-wide">
+              L
             </div>
-            {/* Logo text */}
-            <span style={{ fontSize: 16, lineHeight: 1 }}>
-              <span style={{ fontWeight: 700, color: '#0F172A' }}>LeadFlow</span>
-              <span style={{ fontWeight: 700, color: '#4F46E5' }}> CRM</span>
+            <span className="font-extrabold text-gray-900 dark:text-white tracking-tight text-sm uppercase">
+              LeadFlow <span className="text-indigo-600 dark:text-indigo-400 font-medium">CRM</span>
             </span>
           </div>
 
-          {/* Close button (mobile only) */}
           <button
             onClick={toggleSidebar}
-            className="md:hidden"
-            style={{
-              color: '#94A3B8',
-              padding: 4,
-              borderRadius: 6,
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-            }}
+            className="md:hidden p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 transition-colors"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        {/* ── Navigation ── */}
-        <nav style={{ padding: '16px 12px', flex: 1 }}>
-          {/* Section label */}
-          <p
-            style={{
-              fontSize: 10,
-              fontWeight: 600,
-              color: '#94A3B8',
-              letterSpacing: '0.08em',
-              padding: '0 8px',
-              marginBottom: 4,
-              textTransform: 'uppercase',
-            }}
-          >
-            Main Menu
-          </p>
+        {/* Navigation list */}
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-7">
+          {sections.map((sec) => (
+            <div key={sec.title} className="space-y-2">
+              <h4 className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest px-3">
+                {sec.title}
+              </h4>
 
-          {navItems.map(({ name, path, icon: Icon, end }) => (
-            <NavLink
-              key={path}
-              to={path}
-              end={end}
-              onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}
-              style={({ isActive }) => ({
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '10px 12px',
-                borderRadius: 8,
-                marginBottom: 2,
-                fontSize: 14,
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? '#4F46E5' : '#64748B',
-                background: isActive ? '#EEF2FF' : 'transparent',
-                textDecoration: 'none',
-                transition: 'all 0.15s ease',
-              })}
-              className={({ isActive }) =>
-                isActive ? '' : 'hover:bg-[#F8FAFC] hover:!text-[#0F172A]'
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Icon size={18} color={isActive ? '#4F46E5' : 'currentColor'} />
-                  <span>{name}</span>
-                </>
-              )}
-            </NavLink>
+              <div className="space-y-1">
+                {sec.items.map(({ name, path, icon: Icon, end }) => (
+                  <NavLink
+                    key={path}
+                    to={path}
+                    end={end}
+                    onClick={() => {
+                      if (window.innerWidth < 768) toggleSidebar();
+                    }}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all group ${
+                        isActive
+                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/10'
+                          : 'text-gray-600 dark:text-slate-400 hover:bg-gray-150 dark:hover:bg-slate-800/50 hover:text-gray-900 dark:hover:text-slate-200'
+                      }`
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon size={16} />
+                      <span>{name}</span>
+                    </div>
+                    <ChevronRight 
+                      size={12} 
+                      className="opacity-0 group-hover:opacity-100 group-[.active]:opacity-100 transition-opacity" 
+                    />
+                  </NavLink>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
 
-        {/* ── Bottom version tag ── */}
-        <div style={{ padding: 20 }}>
-          <p style={{ fontSize: 11, color: '#CBD5E1', margin: 0 }}>v1.0.0</p>
+        {/* Bottom User Profile Card */}
+        <div className="p-4 border-t border-gray-200/60 dark:border-slate-800/60 bg-gray-50/50 dark:bg-slate-900/30">
+          <div className="flex items-center gap-3 p-1">
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-extrabold flex items-center justify-center border border-indigo-200/30 text-xs">
+              HM
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-gray-800 dark:text-slate-200 truncate">
+                Himesh Mehta
+              </p>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400 truncate">
+                Super Administrator
+              </p>
+            </div>
+          </div>
         </div>
       </aside>
     </>

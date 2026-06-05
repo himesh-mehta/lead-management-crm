@@ -25,24 +25,42 @@ const AddLead = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate('/leads')}
-          className="p-2 text-slate-400 hover:text-slate-100 bg-slate-800 border border-slate-700 rounded-lg transition-colors hover:bg-slate-700"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-100">Add New Lead</h1>
-          <p className="text-sm text-slate-400">Fill in the form to register a new lead in the pipeline</p>
+    <div style={{ background: '#FAFAFA', minHeight: '100vh', padding: '24px 20px' }}>
+      <div style={{ maxWidth: 768, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        
+        {/* Breadcrumbs & Header */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#888888' }}>
+            <span style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>Dashboard</span>
+            <span>/</span>
+            <span style={{ cursor: 'pointer' }} onClick={() => navigate('/leads')}>Leads</span>
+            <span>/</span>
+            <span style={{ color: '#000000', fontWeight: 500 }}>Add</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+            <button
+              onClick={() => navigate('/leads')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#888888',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                padding: 4,
+              }}
+              className="hover:text-[#000000]"
+            >
+              <ArrowLeft size={16} />
+            </button>
+            <h1 style={{ fontSize: 16, fontWeight: 700, color: '#000000', margin: 0 }}>Add New Lead</h1>
+          </div>
         </div>
-      </div>
 
-      {/* Form Card */}
-      <div className="mt-4">
-        <LeadForm onSubmit={handleSubmit} onCancel={() => navigate('/leads')} loading={loading} />
+        {/* Form Container */}
+        <div>
+          <LeadForm onSubmit={handleSubmit} onCancel={() => navigate('/leads')} loading={loading} />
+        </div>
       </div>
     </div>
   );

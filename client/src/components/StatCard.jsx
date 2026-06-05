@@ -1,112 +1,83 @@
 import React from 'react';
+import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
 
-const colorMap = {
+const colorVariants = {
   indigo: {
-    topBorder: '#4F46E5',
-    iconBg: '#EEF2FF',
-    iconColor: '#4F46E5',
+    bg: 'bg-indigo-50 dark:bg-indigo-950/30',
+    icon: 'text-indigo-600 dark:text-indigo-400',
+    border: 'border-indigo-100/50 dark:border-indigo-900/30',
   },
   green: {
-    topBorder: '#10B981',
-    iconBg: '#D1FAE5',
-    iconColor: '#10B981',
+    bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+    icon: 'text-emerald-600 dark:text-emerald-400',
+    border: 'border-emerald-100/50 dark:border-emerald-900/30',
   },
-  yellow: {
-    topBorder: '#F59E0B',
-    iconBg: '#FEF3C7',
-    iconColor: '#F59E0B',
-  },
-  purple: {
-    topBorder: '#8B5CF6',
-    iconBg: '#EDE9FE',
-    iconColor: '#8B5CF6',
-  },
-  blue: {
-    topBorder: '#3B82F6',
-    iconBg: '#EFF6FF',
-    iconColor: '#3B82F6',
+  orange: {
+    bg: 'bg-amber-50 dark:bg-amber-950/30',
+    icon: 'text-amber-600 dark:text-amber-400',
+    border: 'border-amber-100/50 dark:border-amber-900/30',
   },
   red: {
-    topBorder: '#EF4444',
-    iconBg: '#FEF2F2',
-    iconColor: '#EF4444',
+    bg: 'bg-red-50 dark:bg-red-950/30',
+    icon: 'text-red-600 dark:text-red-400',
+    border: 'border-red-100/50 dark:border-red-900/30',
+  },
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-950/30',
+    icon: 'text-blue-600 dark:text-blue-400',
+    border: 'border-blue-100/50 dark:border-blue-900/30',
   },
 };
 
-const StatCard = ({ title, value, icon: Icon, color = 'indigo', subtitle }) => {
-  const theme = colorMap[color] || colorMap.indigo;
+const StatCard = ({ title, value, growth, trend = 'neutral', icon: Icon, color = 'indigo' }) => {
+  const variant = colorVariants[color] || colorVariants.indigo;
 
   return (
-    <div
-      style={{
-        background: '#FFFFFF',
-        border: '1px solid #E2E8F0',
-        borderRadius: 12,
-        padding: '20px 24px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-        borderTop: `3px solid ${theme.topBorder}`,
-        transition: 'all 0.2s ease',
-        cursor: 'default',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
-        e.currentTarget.style.transform = 'translateY(-1px)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
-    >
-      {/* Top row: label + icon */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <p
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            color: '#94A3B8',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            margin: 0,
-          }}
-        >
+    <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 shadow-soft glass-panel-hover flex flex-col justify-between h-32 relative overflow-hidden transition-all duration-300">
+      
+      {/* Upper Section */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 tracking-wide">
           {title}
-        </p>
-
+        </span>
+        
         {Icon && (
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              background: theme.iconBg,
-              borderRadius: 8,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <Icon size={18} color={theme.iconColor} />
+          <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${variant.bg} ${variant.icon} ${variant.border}`}>
+            <Icon size={16} />
           </div>
         )}
       </div>
 
-      {/* Number */}
-      <p
-        style={{
-          fontSize: 28,
-          fontWeight: 700,
-          color: '#0F172A',
-          margin: '12px 0 4px',
-          lineHeight: 1,
-        }}
-      >
-        {value}
-      </p>
+      {/* Value & Growth indicator */}
+      <div className="flex items-end justify-between mt-3">
+        <span className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none">
+          {value}
+        </span>
 
-      {/* Subtitle */}
-      {subtitle && (
-        <p style={{ fontSize: 13, color: '#94A3B8', margin: 0 }}>{subtitle}</p>
-      )}
+        {/* Growth badge */}
+        {growth && (
+          <div className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-lg text-[10px] font-bold ${
+            trend === 'up' 
+              ? 'text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30' 
+              : trend === 'down'
+                ? 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/30'
+                : 'text-gray-600 bg-gray-50 dark:text-slate-400 dark:bg-slate-850'
+          }`}>
+            {trend === 'up' && <ArrowUpRight size={11} />}
+            {trend === 'down' && <ArrowDownRight size={11} />}
+            {trend === 'neutral' && <Minus size={11} />}
+            <span>{growth}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom design accent stripe */}
+      <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${
+        color === 'indigo' ? 'bg-indigo-500' :
+        color === 'green' ? 'bg-emerald-500' :
+        color === 'orange' ? 'bg-amber-500' :
+        color === 'red' ? 'bg-red-500' : 'bg-blue-500'
+      } opacity-60`} />
     </div>
   );
 };

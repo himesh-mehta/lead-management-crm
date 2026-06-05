@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { getLeads } from '../services/api';
+import { getLeads, searchLeads } from '../services/api';
 
 /**
  * Custom hook to manage leads state, fetching, pagination, and reload.
@@ -18,11 +18,20 @@ export const useLeads = () => {
     setError(null);
     setLastParams(params);
     try {
-      const data = await getLeads(params);
-      setLeads(data.leads || []);
-      setTotal(data.total || 0);
-      setCurrentPage(data.currentPage || 1);
-      setTotalPages(data.totalPages || 0);
+      let data;
+      if (params.q && params.q.trim() !== '') {
+        data = await searchLeads(params.q);
+        setLeads(data.leads || []);
+        setTotal(data.total || 0);
+        setCurrentPage(1);
+        setTotalPages(1);
+      } else {
+        data = await getLeads(params);
+        setLeads(data.leads || []);
+        setTotal(data.total || 0);
+        setCurrentPage(data.currentPage || 1);
+        setTotalPages(data.totalPages || 0);
+      }
     } catch (err) {
       console.error('Error fetching leads:', err);
       setError(err.response?.data?.message || err.message || 'Failed to fetch leads');

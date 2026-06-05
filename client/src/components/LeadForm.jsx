@@ -56,85 +56,153 @@ const LeadForm = ({ initialData, onSubmit, onCancel, loading }) => {
     }
   };
 
-  const inputClass = (field) =>
-    `w-full px-4 py-2.5 bg-white border rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-150 text-sm ${
-      errors[field] ? 'border-red-400 focus:ring-red-500' : 'border-gray-300'
-    }`;
+  const [focusedField, setFocusedField] = useState('');
+
+  const inputStyle = (field) => ({
+    width: '100%',
+    padding: '8px 12px',
+    background: '#FFFFFF',
+    border: `1px solid ${errors[field] ? '#000000' : focusedField === field ? '#000000' : '#E5E5E5'}`,
+    borderRadius: 4,
+    color: '#000000',
+    fontSize: 13,
+    outline: 'none',
+    boxShadow: focusedField === field ? '0 0 0 3px rgba(0,0,0,0.06)' : 'none',
+    transition: 'all 0.15s ease',
+  });
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm max-w-2xl mx-auto transition-shadow duration-200 hover:shadow-md"
+      style={{
+        background: '#FFFFFF',
+        border: '1px solid #E5E5E5',
+        borderRadius: 4,
+        padding: '24px 20px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+        maxWidth: 768,
+        margin: '0 auto',
+      }}
     >
-      <h2 className="text-xl font-bold text-gray-900 pb-4 border-b border-gray-100">
-        {initialData ? 'Update Lead Details' : 'Add New Lead'}
-      </h2>
+      {/* SECTION 1: Contact Information */}
+      <h3
+        style={{
+          fontSize: 11,
+          fontWeight: 600,
+          color: '#888888',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          borderBottom: '1px solid #E5E5E5',
+          paddingBottom: 6,
+          marginBottom: 16,
+        }}
+      >
+        Contact Information
+      </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 24 }}>
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name *</label>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#000000', marginBottom: 6 }}>
+            Full Name *
+          </label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            onFocus={() => setFocusedField('name')}
+            onBlur={() => setFocusedField('')}
             placeholder="John Doe"
-            className={inputClass('name')}
+            style={inputStyle('name')}
           />
-          {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
+          {errors.name && <p style={{ color: '#000000', fontWeight: 'bold', fontSize: 11, marginTop: 4, marginBlockEnd: 0 }}>{errors.name}</p>}
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address *</label>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#000000', marginBottom: 6 }}>
+            Email Address *
+          </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
+            onFocus={() => setFocusedField('email')}
+            onBlur={() => setFocusedField('')}
             placeholder="johndoe@example.com"
-            className={inputClass('email')}
+            style={inputStyle('email')}
           />
-          {errors.email && <p className="text-xs text-red-600 mt-1">{errors.email}</p>}
+          {errors.email && <p style={{ color: '#000000', fontWeight: 'bold', fontSize: 11, marginTop: 4, marginBlockEnd: 0 }}>{errors.email}</p>}
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number *</label>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#000000', marginBottom: 6 }}>
+            Phone Number *
+          </label>
           <input
             type="text"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
+            onFocus={() => setFocusedField('phone')}
+            onBlur={() => setFocusedField('')}
             placeholder="+1 (555) 000-0000"
-            className={inputClass('phone')}
+            style={inputStyle('phone')}
           />
-          {errors.phone && <p className="text-xs text-red-600 mt-1">{errors.phone}</p>}
+          {errors.phone && <p style={{ color: '#000000', fontWeight: 'bold', fontSize: 11, marginTop: 4, marginBlockEnd: 0 }}>{errors.phone}</p>}
         </div>
 
         {/* Company */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Company Name *</label>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#000000', marginBottom: 6 }}>
+            Company Name *
+          </label>
           <input
             type="text"
             name="company"
             value={formData.company}
             onChange={handleChange}
+            onFocus={() => setFocusedField('company')}
+            onBlur={() => setFocusedField('')}
             placeholder="Acme Corp"
-            className={inputClass('company')}
+            style={inputStyle('company')}
           />
-          {errors.company && <p className="text-xs text-red-600 mt-1">{errors.company}</p>}
+          {errors.company && <p style={{ color: '#000000', fontWeight: 'bold', fontSize: 11, marginTop: 4, marginBlockEnd: 0 }}>{errors.company}</p>}
         </div>
+      </div>
 
+      {/* SECTION 2: Lead Details */}
+      <h3
+        style={{
+          fontSize: 11,
+          fontWeight: 600,
+          color: '#888888',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          borderBottom: '1px solid #E5E5E5',
+          paddingBottom: 6,
+          marginBottom: 16,
+        }}
+      >
+        Lead Details
+      </h3>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* Status */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Pipeline Status</label>
+        <div>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#000000', marginBottom: 6 }}>
+            Pipeline Status
+          </label>
           <select
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-150 text-sm"
+            onFocus={() => setFocusedField('status')}
+            onBlur={() => setFocusedField('')}
+            style={inputStyle('status')}
           >
             <option value="New">New</option>
             <option value="Contacted">Contacted</option>
@@ -145,25 +213,54 @@ const LeadForm = ({ initialData, onSubmit, onCancel, loading }) => {
         </div>
 
         {/* Notes */}
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Notes</label>
+        <div>
+          <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#000000', marginBottom: 6 }}>
+            Notes
+          </label>
           <textarea
             name="notes"
             value={formData.notes}
             onChange={handleChange}
+            onFocus={() => setFocusedField('notes')}
+            onBlur={() => setFocusedField('')}
             rows={4}
             placeholder="Add any additional lead context..."
-            className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-150 resize-none text-sm"
+            style={{
+              ...inputStyle('notes'),
+              resize: 'none',
+            }}
           />
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-5 border-t border-gray-100">
+      {/* Form Actions */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'end',
+          gap: 12,
+          marginTop: 24,
+          paddingTop: 16,
+          borderTop: '1px solid #E5E5E5',
+        }}
+      >
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-2.5 text-sm font-semibold bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+            style={{
+              padding: '8px 16px',
+              background: '#FFFFFF',
+              border: '1px solid #E5E5E5',
+              borderRadius: 4,
+              color: '#000000',
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'background 0.15s ease',
+            }}
+            className="hover:bg-[#FAFAFA]"
           >
             Cancel
           </button>
@@ -171,10 +268,25 @@ const LeadForm = ({ initialData, onSubmit, onCancel, loading }) => {
         <button
           type="submit"
           disabled={loading}
-          className="px-5 py-2.5 text-sm font-semibold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          style={{
+            padding: '8px 24px',
+            background: '#000000',
+            border: 'none',
+            borderRadius: 4,
+            color: '#FFFFFF',
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+            transition: 'background 0.15s ease',
+          }}
+          className="hover:bg-[#222222]"
         >
-          {loading && <Loader2 size={16} className="animate-spin" />}
-          {loading ? 'Processing...' : initialData ? 'Save Changes' : 'Add Lead'}
+          {loading && <Loader2 size={14} className="animate-spin" />}
+          <span>{loading ? 'Processing...' : initialData ? 'Save Changes' : 'Add Lead'}</span>
         </button>
       </div>
     </form>
