@@ -62,9 +62,13 @@ const createLead = async (req, res) => {
   } catch (err) {
     console.error('[createLead]', err.message);
 
-    // Unique email violation (PostgreSQL error code 23505)
-    if (err.code === '23505') {
-      return res.status(400).json({ message: 'A lead with this email already exists' });
+    const dbErrorCode = err.code || err.driverError?.code;
+    if (
+      dbErrorCode === '23505' || 
+      err.message.includes('unique constraint') || 
+      err.message.includes('leads_email_unique')
+    ) {
+      return res.status(400).json({ message: 'A prospect with this email address is already registered' });
     }
 
     res.status(err.statusCode || 500).json({ message: err.message });
@@ -89,9 +93,13 @@ const updateLead = async (req, res) => {
   } catch (err) {
     console.error('[updateLead]', err.message);
 
-    // Unique email violation on update
-    if (err.code === '23505') {
-      return res.status(400).json({ message: 'A lead with this email already exists' });
+    const dbErrorCode = err.code || err.driverError?.code;
+    if (
+      dbErrorCode === '23505' || 
+      err.message.includes('unique constraint') || 
+      err.message.includes('leads_email_unique')
+    ) {
+      return res.status(400).json({ message: 'A prospect with this email address is already registered' });
     }
 
     res.status(err.statusCode || 500).json({ message: err.message });

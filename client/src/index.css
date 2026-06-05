@@ -225,7 +225,10 @@
 }
 .border-slate-100,
 .border-gray-150 {
-  border-color: #cbd5e1 !important; /* slate-300 (Clearly Defined Borders) */
+  border-color: rgba(37, 51, 66, 0.18) !important; /* Slate-Blue tint matching the Sidebar */
+}
+.border-gray-200 {
+  border-color: rgba(37, 51, 66, 0.14) !important; /* Soft Slate-Blue tint matching the Sidebar */
 }
 
 /* ========== CRM Select Dropdown ========== */

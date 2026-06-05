@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Users, UserCheck, UserX, TrendingUp, HelpCircle, 
-  BarChart3, Clock, Sparkles, Zap, Shield, Globe
+  Clock, Sparkles, Zap, Shield, Globe
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,

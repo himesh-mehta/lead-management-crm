@@ -1,7 +1,7 @@
 const pool = require('../config/db');
 const { db } = require('../db');
 const { leads } = require('../db/schema');
-const { eq, ilike, or, and, sql, desc } = require('drizzle-orm');
+const { eq, ilike, or, and, sql, desc, asc } = require('drizzle-orm');
 
 // ─── Email Validation ─────────────────────────────────────────────────────────
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -114,8 +114,8 @@ const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at' 
 
   // Order logic
   let orderClause = desc(leads.createdAt);
-  if (sortColumn === 'name') orderClause = desc(leads.name);
-  else if (sortColumn === 'company') orderClause = desc(leads.company);
+  if (sortColumn === 'name') orderClause = asc(leads.name);
+  else if (sortColumn === 'company') orderClause = asc(leads.company);
   else if (sortColumn === 'status') orderClause = desc(leads.status);
   else if (sortColumn === 'updated_at') orderClause = desc(leads.updatedAt);
 

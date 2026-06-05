@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Mail, Phone, Building2, Globe, Calendar, MessageSquare,
-  Edit2, Trash2, ShieldCheck, HelpCircle, Clock, Send, Award, Users, MapPin
+  Edit2, Trash2, HelpCircle, Clock, Send, Award, Users, MapPin, FileText
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLeadDetailsQuery, useUpdateLeadMutation, useDeleteLeadMutation } from '../hooks/useLeads';
@@ -32,7 +33,7 @@ const LeadDetails: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-pulse">
+      <div className="space-y-6 p-4 sm:p-6 max-w-[1400px] mx-auto animate-pulse">
         <div className="h-6 bg-gray-250 dark:bg-slate-800 rounded w-1/4" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 h-96 bg-gray-200 dark:bg-slate-800 rounded-2xl" />
@@ -131,7 +132,7 @@ const LeadDetails: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in pb-24">
+    <div className="space-y-6 p-4 sm:p-6 max-w-[1400px] mx-auto animate-fade-in pb-24">
       {/* Top Header Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
         <div className="flex items-center gap-3">
@@ -157,29 +158,31 @@ const LeadDetails: React.FC = () => {
 
         {/* Toolbar actions */}
         <div className="flex flex-wrap items-center gap-2.5">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-250 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-850 rounded-xl transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-250 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-850 rounded-xl transition-all shadow-sm"
           >
             <Edit2 size={13} />
             <span>Edit</span>
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setDeleteOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-650 bg-red-50/50 hover:bg-red-50 dark:bg-red-950/20 dark:text-red-400 rounded-xl transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-650 bg-red-50/50 hover:bg-red-50 dark:bg-red-950/20 dark:text-red-400 rounded-xl transition-all shadow-sm"
           >
             <Trash2 size={13} />
             <span>Delete</span>
-          </button>
+          </motion.button>
         </div>
       </div>
-
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
         
-        {/* Left column: notes timelines */}
-        <div className="lg:col-span-2 space-y-6">
-          
+        {/* Left column: notes timelines + contact */}
+        <div className="lg:col-span-2 flex flex-col space-y-6">
           {/* Notes Form */}
           <div className="p-5 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
             <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
@@ -216,14 +219,17 @@ const LeadDetails: React.FC = () => {
 
           {/* Vertical Notes Timeline */}
           <div className="p-6 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-6">Notes & Interactions Timeline</h3>
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <Clock size={16} className="text-indigo-500" />
+              <span>Notes & Interactions Timeline</span>
+            </h3>
             
-            <div className="max-h-[400px] overflow-y-auto pr-2">
-              <div className="relative border-l border-gray-100 dark:border-slate-850 pl-5 ml-2.5 space-y-6">
+            <div className="max-h-[240px] overflow-y-scroll pr-2">
+              <div className="relative border-l-2 border-dashed border-gray-200 dark:border-slate-800 pl-5 ml-2 space-y-4">
                 {notesTimeline.map((note, index) => (
                   <div key={index} className="relative text-xs">
-                    <span className="absolute -left-[23.5px] top-1.5 flex h-4 w-4 rounded-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 items-center justify-center">
-                      <Clock size={10} className="text-gray-400" />
+                    <span className="absolute -left-[25px] top-1 flex h-4 w-4 rounded-full bg-white dark:bg-slate-900 border border-gray-255 dark:border-slate-800 items-center justify-center shadow-sm">
+                      <FileText size={9} className="text-orange-500" />
                     </span>
 
                     <div>
@@ -231,7 +237,7 @@ const LeadDetails: React.FC = () => {
                         <span className="font-semibold text-gray-750 dark:text-slate-350">Timeline Entry</span>
                         <span className="text-[10px]">{formatDate(note.date)}</span>
                       </div>
-                      <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-850 border border-gray-100 dark:border-slate-800/80 text-gray-800 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                      <div className="py-2 px-3 rounded-xl bg-gray-50 dark:bg-slate-850 border border-gray-100 dark:border-slate-800/80 text-gray-800 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
                         {note.text}
                       </div>
                     </div>
@@ -247,19 +253,19 @@ const LeadDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Contact Details */}
-          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
+          {/* Contact Details (Stretched) */}
+          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden flex-1 flex flex-col">
             {/* Card header bar */}
-            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850">
+            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850 flex-shrink-0">
               <div className="w-6 h-6 rounded-lg bg-orange-50 dark:bg-orange-950 flex items-center justify-center">
                 <Phone size={13} className="text-orange-500" />
               </div>
               <h3 className="text-xs font-bold text-gray-800 dark:text-white tracking-wide">Contact Details</h3>
             </div>
 
-            <div className="divide-y divide-gray-100 dark:divide-slate-800">
+            <div className="divide-y divide-gray-100 dark:divide-slate-800 flex-1 flex flex-col justify-between">
               {/* Email */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center flex-shrink-0">
                   <Mail size={13} className="text-indigo-500" />
                 </div>
@@ -272,7 +278,7 @@ const LeadDetails: React.FC = () => {
               </div>
 
               {/* Phone */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-950 flex items-center justify-center flex-shrink-0">
                   <Phone size={13} className="text-green-500" />
                 </div>
@@ -285,12 +291,12 @@ const LeadDetails: React.FC = () => {
               </div>
 
               {/* Lead Source */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950 flex items-center justify-center flex-shrink-0">
                   <Globe size={13} className="text-sky-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lead Source</p>
+                  <p className="text-[10px] font-semibold text-gray-450 uppercase tracking-wider">Lead Source</p>
                   <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-slate-300">
                     {lead.source || 'Web'}
                   </span>
@@ -298,7 +304,7 @@ const LeadDetails: React.FC = () => {
               </div>
 
               {/* Registered */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950 flex items-center justify-center flex-shrink-0">
                   <Calendar size={13} className="text-rose-500" />
                 </div>
@@ -309,18 +315,16 @@ const LeadDetails: React.FC = () => {
               </div>
             </div>
           </div>
-
         </div>
 
-        {/* Right column: pipeline + company */}
-        <div className="lg:col-span-2 space-y-5">
-          
+        {/* Right column: pipeline + company info */}
+        <div className="lg:col-span-2 flex flex-col space-y-6">
           {/* Quick status transition controls */}
           <div className="p-5 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
-            <h3 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-4">Pipeline Status</h3>
+            <h3 className="text-xs font-bold text-gray-550 dark:text-slate-400 uppercase tracking-wider mb-4">Pipeline Status</h3>
             
             {/* Vertical stepper */}
-            <div className="relative">
+            <div className="relative space-y-4 py-1">
               {[
                 { status: 'New' as LeadStatus,       color: '#3b82f6', bg: 'bg-blue-500',    ring: 'ring-blue-200',    label: 'New Lead',       sub: 'Contact registered' },
                 { status: 'Contacted' as LeadStatus, color: '#f59e0b', bg: 'bg-amber-500',   ring: 'ring-amber-200',   label: 'Contacted',      sub: 'Outreach initiated' },
@@ -331,11 +335,11 @@ const LeadDetails: React.FC = () => {
                 const isActive = lead.status === item.status;
                 const isLast   = idx === arr.length - 1;
                 return (
-                  <div key={item.status} className="relative flex gap-3">
+                  <div key={item.status} className="relative flex gap-3 items-center">
                     {/* Connector line */}
                     {!isLast && (
                       <div
-                        className="absolute left-[13px] top-7 w-0.5 bottom-0"
+                        className="absolute left-[13px] top-8 w-0.5 bottom-[-16px] z-0"
                         style={{ backgroundColor: isActive || lead.status === arr[idx + 1]?.status ? item.color + '40' : '#e5e7eb' }}
                       />
                     )}
@@ -343,7 +347,7 @@ const LeadDetails: React.FC = () => {
                     {/* Step indicator */}
                     <button
                       onClick={() => handleStatusChange(item.status)}
-                      className={`relative z-10 flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all mt-0.5 ${
+                      className={`relative z-10 flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all ${
                         isActive
                           ? `${item.bg} ring-4 ${item.ring} shadow-md`
                           : 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700'
@@ -357,7 +361,7 @@ const LeadDetails: React.FC = () => {
                     {/* Label block */}
                     <button
                       onClick={() => handleStatusChange(item.status)}
-                      className={`flex-1 flex flex-col text-left py-1.5 mb-3 px-3 rounded-xl transition-all ${
+                      className={`flex-1 flex flex-col text-left py-1.5 px-3 rounded-xl transition-all ${
                         isActive
                           ? 'bg-gray-50 dark:bg-slate-800/60 border border-gray-150 dark:border-slate-700'
                           : 'hover:bg-gray-50 dark:hover:bg-slate-800/40'
@@ -366,7 +370,7 @@ const LeadDetails: React.FC = () => {
                       <span className={`text-xs font-bold ${ isActive ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-slate-400' }`}>
                         {item.label}
                       </span>
-                      <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium mt-0.5">
+                      <span className="text-[10px] text-gray-450 dark:text-slate-500 font-medium mt-0.5">
                         {item.sub}
                       </span>
                     </button>
@@ -376,10 +380,10 @@ const LeadDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Company Information */}
-          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
+          {/* Company Information (Stretched) */}
+          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden flex-1 flex flex-col">
             {/* Card header bar */}
-            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850">
+            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850 flex-shrink-0">
               <div className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center">
                 <Building2 size={13} className="text-indigo-500" />
               </div>
@@ -387,9 +391,9 @@ const LeadDetails: React.FC = () => {
             </div>
 
             {/* Rows */}
-            <div className="divide-y divide-gray-100 dark:divide-slate-800">
+            <div className="divide-y divide-gray-100 dark:divide-slate-800 flex-1 flex flex-col justify-between">
               {/* Company name */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
                   <Building2 size={13} className="text-slate-500" />
                 </div>
@@ -400,7 +404,7 @@ const LeadDetails: React.FC = () => {
               </div>
 
               {/* Corporate site */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
                   <Globe size={13} className="text-blue-500" />
                 </div>
@@ -419,34 +423,34 @@ const LeadDetails: React.FC = () => {
               </div>
 
               {/* Company size */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950 flex items-center justify-center flex-shrink-0">
                   <Users size={13} className="text-purple-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Company Size</p>
+                  <p className="text-[10px] font-semibold text-gray-450 uppercase tracking-wider">Company Size</p>
                   <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{companyInfo.employees}</p>
                 </div>
               </div>
 
               {/* Funding round */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950 flex items-center justify-center flex-shrink-0">
                   <Award size={13} className="text-amber-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Funding Round</p>
+                  <p className="text-[10px] font-semibold text-gray-450 uppercase tracking-wider">Funding Round</p>
                   <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{companyInfo.funding}</p>
                 </div>
               </div>
 
               {/* Location */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
+              <div className="flex items-center gap-3 px-5 py-3 flex-1">
                 <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center flex-shrink-0">
                   <MapPin size={13} className="text-emerald-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Location</p>
+                  <p className="text-[10px] font-semibold text-gray-450 uppercase tracking-wider">Location</p>
                   <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{companyInfo.location}</p>
                 </div>
               </div>

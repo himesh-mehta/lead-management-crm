@@ -5,7 +5,7 @@ import {
   Users,
   BarChart3,
   Settings,
-  ShieldCheck,
+  Headphones,
   ChevronRight,
   ChevronLeft,
 } from 'lucide-react';
@@ -21,7 +21,7 @@ const sections = [
     items: [
       { name: 'Dashboard', path: '/', icon: LayoutDashboard, end: true },
       { name: 'Leads Directory', path: '/leads', icon: Users, end: false },
-      { name: 'Converted Customers', path: '/customers', icon: ShieldCheck, end: false },
+      { name: 'Customers', path: '/customers', icon: Headphones, end: false },
       { name: 'Pipeline Analytics', path: '/stats', icon: BarChart3, end: false },
     ]
   },

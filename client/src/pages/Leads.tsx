@@ -31,7 +31,7 @@ const Leads: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
-  const [sortField, setSortField] = useState('created_at');
+  const [sortField, setSortField] = useState('name');
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<'table' | 'card'>('table');
 
@@ -81,20 +81,6 @@ const Leads: React.FC = () => {
     setPage(1);
   };
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatusFilter(e.target.value);
-    setPage(1);
-  };
-
-  const handleSourceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSourceFilter(e.target.value);
-    setPage(1);
-  };
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortField(e.target.value);
-    setPage(1);
-  };
 
   // Submit modal (Add or Edit)
   const handleModalSubmit = async (formData: Omit<Lead, 'id' | 'createdAt'>) => {
@@ -198,7 +184,7 @@ const Leads: React.FC = () => {
   });
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="p-4 sm:p-6 max-w-[1400px] mx-auto animate-fade-in">
       {/* Header action panel */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-gray-150">
         <div>
@@ -317,7 +303,7 @@ const Leads: React.FC = () => {
                     setSearchTerm('');
                     setStatusFilter('');
                     setSourceFilter('');
-                    setSortField('created_at');
+                    setSortField('name');
                     setPage(1);
                     refetch();
                   }}
@@ -618,15 +604,15 @@ const Leads: React.FC = () => {
         </div>
       )}
 
-      {/* Floating Bulk Actions bar - fixed at bottom center */}
+      {/* Floating Bulk Actions bar - fixed at top center */}
       <AnimatePresence>
         {selectedIds.length > 0 && (
           <motion.div 
-            initial={{ y: 80, opacity: 0 }}
+            initial={{ y: -80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 80, opacity: 0 }}
+            exit={{ y: -80, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 z-50 border border-slate-700"
+            className="fixed top-[76px] left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 z-50 border border-slate-700"
           >
             <span className="text-xs font-bold text-slate-200 whitespace-nowrap">
               {selectedIds.length} lead{selectedIds.length > 1 ? 's' : ''} selected
@@ -645,7 +631,7 @@ const Leads: React.FC = () => {
                 </button>
 
                 {bulkStatusOpen && (
-                  <div className="absolute bottom-full mb-2 left-0 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xl py-1 z-50 flex flex-col w-36">
+                  <div className="absolute top-full mt-2 left-0 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xl py-1 z-50 flex flex-col w-36">
                     {['Contacted', 'Converted', 'Lost', 'New', 'Qualified'].map(status => (
                       <button
                         key={status}

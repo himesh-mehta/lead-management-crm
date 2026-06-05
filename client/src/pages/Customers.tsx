@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Phone, Building2, Search, Trash2, Calendar, ShieldCheck, ExternalLink } from 'lucide-react';
+import { Mail, Phone, Building2, Search, Trash2, Calendar, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLeadsQuery, useDeleteLeadMutation } from '../hooks/useLeads';
 import { formatDate, getAvatarUrl } from '../utils/helpers';
@@ -51,7 +51,7 @@ const Customers: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="space-y-6 p-4 sm:p-6 max-w-[1400px] mx-auto animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
         <div>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">

@@ -48,7 +48,7 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-pulse">
+      <div className="space-y-6 p-4 sm:p-6 max-w-[1400px] mx-auto animate-pulse">
         <div className="flex items-center justify-between pb-4 border-b border-gray-150 dark:border-slate-800">
           <div className="h-7 bg-gray-250 dark:bg-slate-800 rounded w-1/4" />
           <div className="h-10 bg-gray-200 dark:bg-slate-805 rounded w-32" />
@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
 
   if (total === 0) {
     return (
-      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-[1400px] mx-auto">
         <EmptyState 
           title="No Sales Pipeline Data" 
           description="Qualify contacts or generate sandbox mock accounts inside System Settings to view metric logs."
@@ -185,7 +185,7 @@ const Dashboard: React.FC = () => {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto pb-24"
+      className="space-y-6 p-4 sm:p-6 max-w-[1400px] mx-auto pb-24"
     >
       {/* Header section */}
       <motion.div 

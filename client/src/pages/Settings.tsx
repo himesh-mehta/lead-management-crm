@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Database, Loader2, Sparkles, 
-  Settings as SettingsIcon, User, Bell
+  User, Bell
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { createLead, getLeads } from '../services/api';
