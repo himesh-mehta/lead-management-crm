@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, Plus, Search, Bell, Clock, LogOut, Settings, Shield, ChevronDown } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, Plus, Search, Bell, Clock, LogOut, Settings, Shield, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 interface NavbarProps {
   title: string;
+  sidebarOpen: boolean;
   toggleSidebar: () => void;
   onAddLeadClick?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ title, toggleSidebar, onAddLeadClick }) => {
+const Navbar: React.FC<NavbarProps> = ({ title, sidebarOpen, toggleSidebar, onAddLeadClick }) => {
   const navigate = useNavigate();
   const [searchFocused, setSearchFocused] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -73,13 +74,18 @@ const Navbar: React.FC<NavbarProps> = ({ title, toggleSidebar, onAddLeadClick })
       
       {/* Left: Mobile Toggle & Page Header Title / Greeting */}
       <div className="flex items-center gap-4">
-        <button
-          onClick={toggleSidebar}
-          className="p-2 rounded-xl text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors"
-          title="Toggle Sidebar"
-        >
-          <Menu size={18} />
-        </button>
+        <div className="relative group">
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+          >
+            {sidebarOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+          </button>
+          <div className="absolute left-0 top-full mt-1.5 opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 z-50 whitespace-nowrap bg-slate-900 dark:bg-slate-800 text-slate-100 text-[10px] font-bold px-2 py-1.5 rounded-lg shadow-lg border border-slate-700/30 dark:border-slate-700/50">
+            {sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+          </div>
+        </div>
         
         {/* Greeting & Date Info */}
         <div className="hidden sm:block text-left">

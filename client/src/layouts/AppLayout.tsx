@@ -42,6 +42,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, onAddLeadClick }
         {/* Sticky navbar */}
         <Navbar 
           title={title} 
+          sidebarOpen={sidebarOpen}
           toggleSidebar={toggleSidebar} 
           onAddLeadClick={onAddLeadClick} 
         />
