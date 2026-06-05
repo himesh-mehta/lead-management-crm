@@ -4,21 +4,21 @@
 
 @layer base {
   :root {
-    --primary: 79, 70, 229; /* #4F46E5 Indigo */
-    --primary-hover: 67, 56, 202; /* #4338CA */
+    --primary: 99, 102, 241; /* #6366F1 Indigo */
+    --primary-hover: 79, 70, 229; /* #4F46E5 */
     
-    --bg-main: 249, 250, 251; /* #F9FAFB */
+    --bg-main: 248, 250, 252; /* #F8FAFC */
     --bg-card: 255, 255, 255; /* #FFFFFF */
     --bg-sidebar: 255, 255, 255; /* #FFFFFF */
-    --border-color: 229, 231, 235; /* #E5E7EB */
-    --text-primary: 17, 24, 39; /* #111827 */
-    --text-secondary: 107, 114, 128; /* #6B7280 */
+    --border-color: 241, 245, 249; /* #F1F5F9 */
+    --text-primary: 15, 23, 42; /* #0F172A */
+    --text-secondary: 100, 116, 139; /* #64748B */
     
     --success: 16, 185, 129; /* #10B981 */
     --warning: 245, 158, 11; /* #F59E0B */
     --danger: 239, 68, 68; /* #EF4444 */
-    --info: 59, 130, 246; /* #3B82F6 */
-    --purple: 139, 92, 246; /* #8B5CF6 */
+    --info: 99, 102, 241;
+    --purple: 139, 92, 246;
   }
   
   *, *::before, *::after {
@@ -44,10 +44,10 @@
 }
 
 .glass-sidebar {
-  background: rgba(var(--bg-sidebar), 0.9);
+  background: rgba(var(--bg-sidebar), 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(var(--border-color), 0.7);
+  border-right: 1px solid rgba(var(--border-color), 0.8);
 }
 
 .glass-panel-hover {
@@ -55,16 +55,16 @@
 }
 .glass-panel-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.08);
-  border-color: rgba(var(--primary), 0.3);
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.04);
+  border-color: rgba(var(--primary), 0.2);
 }
 
 .shadow-soft {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
 }
 
 .shadow-premium {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(var(--border-color), 0.5);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(var(--border-color), 0.8);
 }
 
 /* Animations */

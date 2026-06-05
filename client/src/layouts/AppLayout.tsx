@@ -36,7 +36,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, onAddLeadClick }
       {/* Main workspace with smooth layout transitions */}
       <div 
         className={`flex-1 flex flex-col h-screen overflow-hidden min-w-0 transition-all duration-300 ease-in-out ${
-          sidebarOpen ? 'md:ml-[260px]' : 'md:ml-0'
+          sidebarOpen ? 'md:ml-[260px]' : 'md:ml-[68px]'
         }`}
       >
         {/* Sticky navbar */}
