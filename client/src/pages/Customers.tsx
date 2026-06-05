@@ -1,26 +1,30 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Phone, Building2, Search, Trash2, Calendar, ExternalLink } from 'lucide-react';
+import { Mail, Phone, Building2, Search, Trash2, Calendar, ExternalLink, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLeadsQuery, useDeleteLeadMutation } from '../hooks/useLeads';
 import { formatDate, getAvatarUrl } from '../utils/helpers';
 import ConfirmModal from '../components/ConfirmModal';
 import Pagination from '../components/Pagination';
+import CrmSelect from '../components/CrmSelect';
 
 const Customers: React.FC = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
+  const [sortField, setSortField] = useState('updated_at');
   
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   // Load Converted leads only
-  const { data, isLoading } = useLeadsQuery({
+  const { data, isLoading, refetch } = useLeadsQuery({
     page,
-    limit: 10,
+    limit: pageSize,
     status: 'Converted',
-    sort: 'updated_at',
+    sort: sortField,
   });
 
   const deleteMutation = useDeleteLeadMutation();
@@ -44,18 +48,21 @@ const Customers: React.FC = () => {
     });
   };
 
-  const filteredCustomers = leads.filter(c => 
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.company.toLowerCase().includes(search.toLowerCase()) ||
-    c.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredCustomers = leads.filter(c => {
+    if (sourceFilter && c.source !== sourceFilter) return false;
+    return (
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.company.toLowerCase().includes(search.toLowerCase()) ||
+      c.email.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   return (
     <div className="space-y-6 p-4 sm:p-6 max-w-[1400px] mx-auto animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
         <div>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
-            Converted Customers
+            Customers
           </h1>
           <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Accounts converted from qualified leads that are successfully won
@@ -72,16 +79,77 @@ const Customers: React.FC = () => {
       {/* Main Container */}
       <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
         {/* Toolbar */}
-        <div className="p-4 border-b border-gray-150 dark:border-slate-800 flex flex-col sm:flex-row gap-3 justify-between items-center bg-gray-50/50 dark:bg-slate-900/50">
-          <div className="relative w-full sm:w-80">
+        <div className="p-4 border-b border-gray-150 dark:border-slate-800 flex flex-col xl:flex-row gap-3 justify-between items-center bg-gray-50/50 dark:bg-slate-900/50">
+          <div className="relative w-full xl:w-80">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             <input
               type="text"
               placeholder="Search customers by name, company..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-xs focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:text-white"
             />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-end">
+            {/* Source filter */}
+            <CrmSelect
+              value={sourceFilter}
+              onChange={(v) => { setSourceFilter(v); setPage(1); }}
+              options={[
+                { value: '', label: 'All Sources' },
+                { value: 'Cold-Call', label: 'Cold-Call' },
+                { value: 'Partner', label: 'Partner' },
+                { value: 'Referral', label: 'Referral' },
+                { value: 'Social Media', label: 'Social Media' },
+                { value: 'Web', label: 'Web' },
+              ]}
+            />
+
+            {/* Sort field */}
+            <CrmSelect
+              value={sortField}
+              onChange={(v) => { setSortField(v); setPage(1); }}
+              options={[
+                { value: 'updated_at', label: 'Sort: Last Updated' },
+                { value: 'created_at', label: 'Sort: Created Date' },
+                { value: 'name', label: 'Sort: Name' },
+                { value: 'company', label: 'Sort: Company' },
+              ]}
+            />
+
+            {/* Page Size Select */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] text-gray-500 dark:text-slate-400 uppercase font-bold tracking-wider">Show:</span>
+              <CrmSelect
+                value={String(pageSize)}
+                onChange={(val) => {
+                  setPageSize(Number(val));
+                  setPage(1);
+                }}
+                options={[
+                  { value: '10', label: '10 records' },
+                  { value: '20', label: '20 records' },
+                  { value: '50', label: '50 records' },
+                ]}
+              />
+            </div>
+
+            <div className="relative group/tip">
+              <button
+                onClick={() => {
+                  setSearch('');
+                  setSourceFilter('');
+                  setSortField('updated_at');
+                  setPage(1);
+                  refetch();
+                }}
+                className="p-2 border border-gray-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 text-gray-400 hover:text-indigo-550 hover:border-indigo-300 dark:hover:border-slate-700 transition-all"
+              >
+                <RefreshCw size={14} />
+              </button>
+              <div className="action-tooltip whitespace-nowrap">Reset Filters</div>
+            </div>
           </div>
         </div>
 

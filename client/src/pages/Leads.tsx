@@ -33,6 +33,7 @@ const Leads: React.FC = () => {
   const [sourceFilter, setSourceFilter] = useState('');
   const [sortField, setSortField] = useState('name');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [viewMode, setViewMode] = useState<'table' | 'card'>('table');
 
   // Modal and Delete states
@@ -52,7 +53,7 @@ const Leads: React.FC = () => {
   // Fetch leads via React Query
   const { data, isLoading, refetch } = useLeadsQuery({
     page,
-    limit: 10,
+    limit: pageSize,
     status: statusFilter || undefined,
     sort: sortField,
     q: searchTerm || undefined,
@@ -297,6 +298,23 @@ const Leads: React.FC = () => {
                 ]}
               />
 
+              {/* Page Size Select */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Show:</span>
+                <CrmSelect
+                  value={String(pageSize)}
+                  onChange={(val) => {
+                    setPageSize(Number(val));
+                    setPage(1);
+                  }}
+                  options={[
+                    { value: '10', label: '10 records' },
+                    { value: '20', label: '20 records' },
+                    { value: '50', label: '50 records' },
+                  ]}
+                />
+              </div>
+
               <div className="relative group/tip">
                 <button
                   onClick={() => {
@@ -304,6 +322,7 @@ const Leads: React.FC = () => {
                     setStatusFilter('');
                     setSourceFilter('');
                     setSortField('name');
+                    setPageSize(10);
                     setPage(1);
                     refetch();
                   }}

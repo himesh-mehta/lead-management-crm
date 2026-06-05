@@ -43,7 +43,7 @@ const App: React.FC = () => {
       else title = 'Lead Details';
     } 
     else if (path.startsWith('/stats') || path.startsWith('/statistics')) title = 'Pipeline Analytics';
-    else if (path.startsWith('/customers')) title = 'Converted Customers';
+    else if (path.startsWith('/customers')) title = 'Customers';
     else if (path.startsWith('/settings')) title = 'System Settings';
     else title = 'LeadBridge CRM';
 
