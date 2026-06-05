@@ -1,32 +1,47 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const { connectDB } = require('./config/db');
 
-// Loads the environment variables from server/.env file
-dotenv.config({ path: require('path').join(__dirname, '.env') });
-
-// Connect to Neon PostgreSQL
-connectDB();
+const { initLeadsTable } = require('./models/Lead');
+const leadRoutes = require('./routes/leadRoutes');
+const errorHandler = require('./middleware/errorHandler');
 
 // Initialize Express app
 const app = express();
 
-// ─── Middleware ──────────────────────────────────────────────────────────────
+// ─── Core Middleware ─────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// CORS configuration (Strict in production, open in development)
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173', // Vite default port
+  'http://localhost:3000',
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin || process.env.NODE_ENV === 'development') {
+        return callback(null, true);
+      }
+      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+      callback(new Error('Blocked by CORS policy'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   })
 );
 
-// ─── Routes ─────────────────────────────────────────────────────────────────
-
-// Health check route
-app.get('/', (req, res) => {
+// ─── Health Check ────────────────────────────────────────────────────────────
+app.get('/health', (req, res) => {
   res.json({
     message: 'LeadFlow CRM API Running',
     database: 'Neon PostgreSQL',
@@ -36,31 +51,47 @@ app.get('/', (req, res) => {
   });
 });
 
-// TODO: Mount feature routes here as you build them
-// app.use('/api/leads', require('./routes/leadRoutes'));
-// app.use('/api/users', require('./routes/userRoutes'));
+// ─── API Routes ───────────────────────────────────────────────────────────────
+app.use('/api/leads', leadRoutes);
 
-// ─── 404 Handler ────────────────────────────────────────────────────────────
-app.use((req, res) => {
-  res.status(404).json({ message: `Route ${req.originalUrl} not found` });
-});
+// ─── Production Mode: Static Assets ──────────────────────────────────────────
+if (process.env.NODE_ENV === 'production') {
+  // Serve the React build directory static assets
+  const clientBuildPath = path.join(__dirname, '../client/dist');
+  app.use(express.static(clientBuildPath));
 
-// ─── Global Error Handler ────────────────────────────────────────────────────
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  console.error(`[ERROR] ${err.message}`);
-  res.status(statusCode).json({
-    message: err.message || 'Internal Server Error',
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+  // Serve the SPA html root entry point for frontend routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
-});
+} else {
+  // Fallback 404 handler for development
+  app.use((req, res) => {
+    res.status(404).json({ message: `Route ${req.method} ${req.originalUrl} not found` });
+  });
+}
 
-// ─── Start Server ────────────────────────────────────────────────────────────
+// ─── Global Error Handler (must be last) ─────────────────────────────────────
+app.use(errorHandler);
+
+// ─── Bootstrap ───────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(
-    `🚀 LeadFlow CRM Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`
-  );
-});
+
+const start = async () => {
+  try {
+    await initLeadsTable();
+
+    app.listen(PORT, () => {
+      console.log(
+        `🚀 LeadFlow CRM Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`
+      );
+    });
+  } catch (err) {
+    console.error('❌ Failed to start server:', err.message);
+    process.exit(1);
+  }
+};
+
+start();
 
 module.exports = app;
