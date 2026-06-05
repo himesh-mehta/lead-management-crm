@@ -203,7 +203,7 @@ const LeadDetails: React.FC = () => {
                 onChange={(e) => setNewNote(e.target.value)}
                 placeholder="Log outcome of discovery calls, budget negotiations, follow-ups..."
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-200 dark:border-slate-850 rounded-xl text-sm bg-transparent text-gray-800 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 resize-none"
+                className="w-full px-4 py-3 border border-gray-200 dark:border-slate-850 rounded-xl text-xs bg-transparent text-gray-800 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 resize-none"
               />
               <div className="flex justify-end">
                 <button

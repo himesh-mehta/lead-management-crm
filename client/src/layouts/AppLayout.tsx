@@ -34,14 +34,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, onAddLeadClick }) => {
         onAddLeadClick={onAddLeadClick} 
       />
 
-      <div className="flex flex-1 overflow-hidden relative">
+      <div className="flex flex-1 overflow-hidden relative bg-[#253342] dark:bg-slate-950">
         {/* Sidebar navigation starting below the header */}
         <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
         {/* Main workspace scrollable content */}
         <main 
-          className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-955 transition-all duration-300 ease-in-out ${
-            sidebarOpen ? 'md:pl-[260px]' : 'md:pl-[68px]'
+          className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-955 transition-all duration-300 ease-in-out md:rounded-tl-[24px] ${
+            sidebarOpen ? 'md:ml-[260px]' : 'md:ml-[56px]'
           }`}
         >
           {children}

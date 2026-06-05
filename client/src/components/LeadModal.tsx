@@ -96,7 +96,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
       <div className="relative w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-900 border border-gray-150 dark:border-slate-800 animate-scale-in max-h-[90vh] flex flex-col">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
             {initialData ? 'Edit Lead Record' : 'Add New Prospect'}
           </h2>
           <button
@@ -126,7 +126,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                 onFocus={() => setFocusedField('name')}
                 onBlur={() => setFocusedField('')}
                 placeholder="Tony Stark"
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-sm transition-all focus:outline-none focus:ring-2 dark:text-white ${
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-xs transition-all focus:outline-none focus:ring-2 dark:text-white ${
                   errors.name 
                     ? 'border-red-500 focus:ring-red-500/20' 
                     : focusedField === 'name'
@@ -155,7 +155,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                 onFocus={() => setFocusedField('email')}
                 onBlur={() => setFocusedField('')}
                 placeholder="tony@stark.industries"
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-sm transition-all focus:outline-none focus:ring-2 dark:text-white ${
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-xs transition-all focus:outline-none focus:ring-2 dark:text-white ${
                   errors.email 
                     ? 'border-red-500 focus:ring-red-500/20' 
                     : focusedField === 'email'
@@ -186,7 +186,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                   onFocus={() => setFocusedField('phone')}
                   onBlur={() => setFocusedField('')}
                   placeholder="+1 (555) Stark-01"
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-sm transition-all focus:outline-none focus:ring-2 dark:text-white ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-xs transition-all focus:outline-none focus:ring-2 dark:text-white ${
                     errors.phone 
                       ? 'border-red-500 focus:ring-red-500/20' 
                       : focusedField === 'phone'
@@ -215,7 +215,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                   onFocus={() => setFocusedField('company')}
                   onBlur={() => setFocusedField('')}
                   placeholder="Stark Industries"
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-sm transition-all focus:outline-none focus:ring-2 dark:text-white ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-xs transition-all focus:outline-none focus:ring-2 dark:text-white ${
                     errors.company 
                       ? 'border-red-500 focus:ring-red-500/20' 
                       : focusedField === 'company'
@@ -245,7 +245,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                   onChange={handleChange}
                   onFocus={() => setFocusedField('status')}
                   onBlur={() => setFocusedField('')}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-sm transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-xs transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
                     focusedField === 'status'
                       ? 'border-indigo-500 focus:ring-indigo-500/20'
                       : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
@@ -275,7 +275,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                   onChange={handleChange}
                   onFocus={() => setFocusedField('source')}
                   onBlur={() => setFocusedField('')}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-sm transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-xs transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
                     focusedField === 'source'
                       ? 'border-indigo-500 focus:ring-indigo-500/20'
                       : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
@@ -305,7 +305,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                   onChange={handleChange}
                   onFocus={() => setFocusedField('gender')}
                   onBlur={() => setFocusedField('')}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-sm transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-xs transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
                     focusedField === 'gender'
                       ? 'border-indigo-500 focus:ring-indigo-500/20'
                       : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
@@ -335,7 +335,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                 onBlur={() => setFocusedField('')}
                 rows={3}
                 placeholder="budget, timeline, critical deal notes..."
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-sm transition-all focus:outline-none focus:ring-2 dark:text-white resize-none ${
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-transparent text-xs transition-all focus:outline-none focus:ring-2 dark:text-white resize-none ${
                   focusedField === 'notes'
                     ? 'border-indigo-500 focus:ring-indigo-500/20'
                     : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
@@ -349,14 +349,14 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 dark:bg-slate-800 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl transition-colors"
+              className="px-4 py-2 text-xs font-medium text-gray-700 bg-gray-50 dark:bg-slate-800 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-75"
+              className="px-5 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-75"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               <span>{loading ? 'Processing...' : initialData ? 'Update Lead' : 'Create Lead'}</span>

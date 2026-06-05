@@ -17,8 +17,8 @@ const colorVariants = {
     icon: 'text-indigo-600 dark:text-indigo-400',
     border: 'border-indigo-100/50 dark:border-indigo-900/30',
     sparkline: {
-      stroke: '#6366F1',
-      fill: 'rgba(99, 102, 241, 0.06)',
+      stroke: '#ff7a59',
+      fill: 'rgba(255, 122, 89, 0.06)',
       path: 'M 0 30 Q 15 10, 30 20 T 60 5 T 90 15 T 120 2'
     }
   },

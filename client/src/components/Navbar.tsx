@@ -58,13 +58,13 @@ const Navbar: React.FC<NavbarProps> = ({ onAddLeadClick }) => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 h-16 w-full glass-panel border-b border-gray-200 dark:border-slate-805 flex items-center justify-between px-6 transition-colors duration-300">
+    <header className="sticky top-0 z-40 h-12 w-full hubspot-header flex items-center justify-between pl-3 pr-6 transition-colors duration-300">
       
       {/* Left: Branding */}
       <div className="flex items-center gap-4">
         {/* Logo and Name */}
         <div className="flex items-center gap-2.5 mr-2 select-none cursor-pointer">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 shadow-md shadow-indigo-600/20 flex items-center justify-center text-white font-extrabold text-sm tracking-wide">
+          <div className="w-8 h-8 rounded-xl bg-indigo-600 shadow-md shadow-indigo-600/20 flex items-center justify-center text-white font-extrabold text-sm tracking-wide">
             LB
           </div>
           <div>
@@ -91,10 +91,10 @@ const Navbar: React.FC<NavbarProps> = ({ onAddLeadClick }) => {
             onChange={(e) => setSearchVal(e.target.value)}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            className={`w-full pl-9 pr-12 py-1.5 rounded-xl text-xs bg-slate-50/50 dark:bg-slate-900/50 border transition-all duration-200 text-slate-800 dark:text-slate-200 focus:outline-none ${
+            className={`w-full pl-9 pr-12 py-1.5 rounded-xl text-xs bg-slate-50/50 dark:bg-slate-900/50 border transition-all duration-200 text-slate-850 dark:text-slate-200 focus:outline-none ${
               searchFocused 
                 ? 'border-indigo-500 ring-2 ring-indigo-500/15 bg-white dark:bg-slate-900' 
-                : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                : 'border-white/20 hover:border-white/40'
             }`}
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-450 dark:text-slate-500 font-mono pointer-events-none">
@@ -115,7 +115,7 @@ const Navbar: React.FC<NavbarProps> = ({ onAddLeadClick }) => {
         )}
 
         {/* Vertical divider */}
-        <div className="h-5 w-[1px] bg-slate-150 dark:bg-slate-800 hidden sm:block" />
+        <div className="h-5 w-[1px] bg-white/20 hidden sm:block" />
 
         {/* Notifications Dropdown */}
         <div className="relative" ref={notifRef}>
@@ -125,11 +125,11 @@ const Navbar: React.FC<NavbarProps> = ({ onAddLeadClick }) => {
             title="Notifications"
           >
             <Bell size={16} />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-indigo-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
+            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-indigo-500 rounded-full ring-2 ring-white" />
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden animate-scale-in">
+            <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden animate-scale-in header-dropdown">
               <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
                 <span className="text-xs font-bold text-slate-900 dark:text-slate-100">Notifications</span>
                 <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold cursor-pointer">Mark all read</span>
@@ -157,14 +157,14 @@ const Navbar: React.FC<NavbarProps> = ({ onAddLeadClick }) => {
             onClick={() => setProfileOpen(!profileOpen)}
             className="flex items-center gap-1.5 focus:outline-none cursor-pointer hover:opacity-95 transition-opacity"
           >
-            <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shadow-indigo-650/10 border border-indigo-550/20">
+            <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shadow-indigo-650/10 border border-white/25">
               HM
             </div>
-            <ChevronDown size={12} className="text-slate-400 hidden sm:block" />
+            <ChevronDown size={12} className="text-white/70 hidden sm:block" />
           </button>
 
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden py-1.5 animate-scale-in">
+            <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden py-1.5 animate-scale-in header-dropdown">
               <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                 <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Himesh Mehta</p>
                 <p className="text-[9px] text-slate-450 dark:text-slate-500">himesh@example.com</p>

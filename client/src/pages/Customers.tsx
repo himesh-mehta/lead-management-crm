@@ -52,14 +52,13 @@ const Customers: React.FC = () => {
 
   return (
     <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in">
-      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2">
-            <ShieldCheck className="text-emerald-500" size={24} />
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2">
+            <ShieldCheck className="text-emerald-500" size={20} />
             <span>Converted Customers</span>
           </h1>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Accounts converted from qualified leads that are successfully won
           </p>
         </div>
@@ -82,7 +81,7 @@ const Customers: React.FC = () => {
               placeholder="Search customers by name, company..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:text-white"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-xs focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:text-white"
             />
           </div>
         </div>
@@ -108,7 +107,7 @@ const Customers: React.FC = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-sm">
+            <table className="w-full border-collapse text-left text-xs">
               <thead>
                 <tr className="bg-gray-50/50 dark:bg-slate-900/80 text-gray-500 dark:text-slate-400 font-semibold border-b border-gray-150 dark:border-slate-800">
                   <th className="px-6 py-3.5">Client & Company</th>

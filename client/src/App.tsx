@@ -14,11 +14,22 @@ import NotFound from './pages/NotFound';
 const App: React.FC = () => {
   const location = useLocation();
 
-  // Force light mode
+  // Force light mode and disable auto dark mode
   useEffect(() => {
-    document.documentElement.classList.remove('dark');
-    document.body.classList.remove('dark');
-    localStorage.removeItem('theme');
+    try {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      localStorage.removeItem('theme');
+      
+      // Enforce light-only color scheme to override Chrome Auto Dark Mode
+      let meta = document.querySelector('meta[name="color-scheme"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'color-scheme');
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', 'only light');
+    } catch (e) {}
   }, []);
 
   // Update document title dynamically based on location

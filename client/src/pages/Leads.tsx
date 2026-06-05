@@ -193,10 +193,10 @@ const Leads: React.FC = () => {
       {/* Header action panel */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
             Leads Pipeline Directory
           </h1>
-          <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Qualify contacts, execute status transitions, and audit deals
           </p>
         </div>
@@ -235,7 +235,7 @@ const Leads: React.FC = () => {
                 placeholder="Search name, email, phone, company..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-xs focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:text-white"
               />
             </div>
 
@@ -323,7 +323,7 @@ const Leads: React.FC = () => {
           ) : viewMode === 'table' ? (
             /* DESKTOP TABLE VIEW */
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-sm">
+              <table className="w-full border-collapse text-left text-xs">
                 <thead>
                   <tr className="bg-gray-50/50 dark:bg-slate-905/80 text-gray-500 dark:text-slate-400 font-semibold border-b border-gray-150 dark:border-slate-800">
                     <th className="px-6 py-3.5 w-10">

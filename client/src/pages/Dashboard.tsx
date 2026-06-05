@@ -30,7 +30,7 @@ const itemVariants = {
 } as const;
 
 const STATUS_COLORS = {
-  New: '#6366F1',       // Indigo
+  New: '#ff7a59',       // HubSpot Orange
   Contacted: '#F59E0B', // Amber
   Qualified: '#8B5CF6', // Purple
   Converted: '#10B981', // Emerald
@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
 
   // 2. Horizontal Funnel Data
   const funnelData = [
-    { stage: 'Prospecting', count: newLeads + contacted, rate: '100%', fill: '#6366F1' },
+    { stage: 'Prospecting', count: newLeads + contacted, rate: '100%', fill: '#ff7a59' },
     { stage: 'Qualified Stage', count: qualified, rate: `${total > 0 ? ((qualified / total) * 100).toFixed(0) : 0}%`, fill: '#8B5CF6' },
     { stage: 'Won Deals', count: converted, rate: conversionRate, fill: '#10B981' },
   ];
@@ -278,8 +278,8 @@ const Dashboard: React.FC = () => {
               <AreaChart data={growthData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="indigoAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366F1" stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor="#6366F1" stopOpacity={0.0}/>
+                    <stop offset="5%" stopColor="#ff7a59" stopOpacity={0.15}/>
+                    <stop offset="95%" stopColor="#ff7a59" stopOpacity={0.0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.08)" />
@@ -294,7 +294,7 @@ const Dashboard: React.FC = () => {
                     color: '#fff'
                   }}
                 />
-                <Area type="monotone" dataKey="count" stroke="#6366F1" strokeWidth={1.8} fillOpacity={1} fill="url(#indigoAreaGrad)" />
+                <Area type="monotone" dataKey="count" stroke="#ff7a59" strokeWidth={1.8} fillOpacity={1} fill="url(#indigoAreaGrad)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -412,7 +412,7 @@ const Dashboard: React.FC = () => {
                   {pieData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS] || '#6366F1'}
+                      fill={STATUS_COLORS[entry.name as keyof typeof STATUS_COLORS] || '#ff7a59'}
                     />
                   ))}
                 </Pie>
@@ -472,7 +472,7 @@ const Dashboard: React.FC = () => {
                   }}
                 />
                 <Bar dataKey="Target" fill="#cbd5e1" radius={[3, 3, 0, 0]} className="dark:fill-slate-800" />
-                <Bar dataKey="Actual" fill="#6366F1" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="Actual" fill="#ff7a59" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -671,7 +671,7 @@ const Dashboard: React.FC = () => {
                     cx="50" 
                     cy="50" 
                     r="40" 
-                    stroke="#6366F1" 
+                    stroke="#ff7a59" 
                     strokeWidth="10" 
                     fill="transparent" 
                     strokeDasharray="251.2"

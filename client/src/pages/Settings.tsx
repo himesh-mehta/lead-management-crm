@@ -75,11 +75,11 @@ const Settings: React.FC = () => {
     <div className="space-y-6 p-4 sm:p-6 max-w-4xl mx-auto animate-fade-in pb-24">
       {/* Page Header */}
       <div className="border-b border-gray-150 dark:border-slate-800 pb-5">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2">
-          <SettingsIcon size={24} className="text-indigo-655" />
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2">
+          <SettingsIcon size={20} className="text-indigo-655" />
           <span>System Settings</span>
         </h1>
-        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+        <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
           Manage system configurations, profiles, seeder utilities, and notify rules
         </p>
       </div>
@@ -102,7 +102,7 @@ const Settings: React.FC = () => {
                   type="text"
                   value={profile.name}
                   onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  className="w-full px-3.5 py-2 border border-gray-205 dark:border-slate-800 rounded-xl bg-transparent text-sm text-gray-805 dark:text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3.5 py-2 border border-gray-205 dark:border-slate-800 rounded-xl bg-transparent text-xs text-gray-855 dark:text-white focus:outline-none focus:border-indigo-500"
                 />
               </div>
               <div>
@@ -113,7 +113,7 @@ const Settings: React.FC = () => {
                   type="text"
                   value={profile.role}
                   disabled
-                  className="w-full px-3.5 py-2 border border-gray-150 dark:border-slate-850 rounded-xl bg-gray-50 dark:bg-slate-850 text-sm text-gray-400 focus:outline-none"
+                  className="w-full px-3.5 py-2 border border-gray-150 dark:border-slate-855 rounded-xl bg-gray-50 dark:bg-slate-850 text-xs text-gray-400 focus:outline-none"
                 />
               </div>
             </div>
@@ -126,7 +126,7 @@ const Settings: React.FC = () => {
                 type="email"
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                className="w-full px-3.5 py-2 border border-gray-200 dark:border-slate-800 rounded-xl bg-transparent text-sm text-gray-800 dark:text-white focus:outline-none"
+                className="w-full px-3.5 py-2 border border-gray-200 dark:border-slate-800 rounded-xl bg-transparent text-xs text-gray-800 dark:text-white focus:outline-none"
               />
             </div>
 

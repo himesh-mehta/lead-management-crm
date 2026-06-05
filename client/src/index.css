@@ -4,20 +4,20 @@
 
 @layer base {
   :root {
-    --primary: 99, 102, 241; /* #6366F1 Indigo */
-    --primary-hover: 79, 70, 229; /* #4F46E5 */
+    --primary: 255, 122, 89; /* #ff7a59 HubSpot Orange */
+    --primary-hover: 229, 67, 28; /* #e5431c */
     
-    --bg-main: 248, 250, 252; /* #F8FAFC */
+    --bg-main: 245, 248, 250; /* #f5f8fa HubSpot Light BG */
     --bg-card: 255, 255, 255; /* #FFFFFF */
-    --bg-sidebar: 255, 255, 255; /* #FFFFFF */
-    --border-color: 241, 245, 249; /* #F1F5F9 */
-    --text-primary: 15, 23, 42; /* #0F172A */
-    --text-secondary: 100, 116, 139; /* #64748B */
+    --bg-sidebar: 37, 51, 66; /* #253342 HubSpot Dark Sidebar/Header */
+    --border-color: 223, 227, 232; /* #dfe3e8 HubSpot Border */
+    --text-primary: 51, 71, 91; /* #33475b HubSpot Charcoal Text */
+    --text-secondary: 71, 85, 105; /* #475569 HubSpot Slate Gray Text (Darker) */
     
-    --success: 16, 185, 129; /* #10B981 */
+    --success: 0, 168, 143; /* #00a88f HubSpot Green */
     --warning: 245, 158, 11; /* #F59E0B */
-    --danger: 239, 68, 68; /* #EF4444 */
-    --info: 99, 102, 241;
+    --danger: 242, 95, 92; /* #f25f5c HubSpot Red */
+    --info: 255, 122, 89;
     --purple: 139, 92, 246;
   }
   
@@ -29,27 +29,130 @@
   body {
     background-color: rgb(var(--bg-main));
     color: rgb(var(--text-primary));
-    font-size: 0.875rem;
-    line-height: 1.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
-/* Glassmorphism custom classes */
+/* Glassmorphism / UI custom classes */
 .glass-panel {
-  background: rgba(var(--bg-card), 0.85);
+  background: rgba(var(--bg-card), 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(var(--border-color), 0.7);
 }
 
 .glass-sidebar {
-  background: rgba(var(--bg-sidebar), 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(var(--border-color), 0.8);
+  background: #253342 !important; /* HubSpot Dark Slate */
+  border-right: 1px solid #1e2a36;
+}
+
+/* Force dark style overrides on elements inside the dark sidebar */
+.glass-sidebar a {
+  color: #ffffff !important;
+}
+.glass-sidebar a:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+.glass-sidebar a.active {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-left-color: #ff7a59 !important; /* HubSpot active orange bar */
+}
+.glass-sidebar svg {
+  stroke: #ffffff !important;
+}
+.glass-sidebar a.active svg {
+  stroke: #ffffff !important;
+}
+.glass-sidebar h4 {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+.glass-sidebar span.rounded-full {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+}
+.glass-sidebar div.border-t {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.15) !important;
+}
+.glass-sidebar div.border-t p {
+  color: #ffffff !important;
+}
+.glass-sidebar div.border-t p.text-xs {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+.glass-sidebar div.border-t .bg-indigo-100 {
+  background: #ff7a59 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+.glass-sidebar button {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+.glass-sidebar button:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Custom HubSpot Top Nav Header Styles */
+.hubspot-header {
+  background: #253342 !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #1e2a36;
+}
+.hubspot-header h3 {
+  color: #ffffff !important;
+}
+.hubspot-header p {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+.hubspot-header input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+.hubspot-header input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+.hubspot-header input:focus {
+  border-color: #ff7a59 !important;
+  box-shadow: 0 0 0 2px rgba(255, 122, 89, 0.2) !important;
+  background: #1e2a36 !important;
+}
+.hubspot-header span.absolute {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+.hubspot-header svg {
+  stroke: rgba(255, 255, 255, 0.7) !important;
+}
+.hubspot-header button {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.hubspot-header button:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+.hubspot-header .border-l {
+  border-left-color: rgba(255, 255, 255, 0.15) !important;
+}
+.hubspot-header .h-5.w-\[1px\] {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+.hubspot-header button.bg-indigo-600 {
+  background-color: #ff7a59 !important;
+  color: #ffffff !important;
+}
+.hubspot-header button.bg-indigo-600:hover {
+  background-color: #ff5c35 !important;
+}
+.hubspot-header .bg-indigo-600 {
+  background-color: #ff7a59 !important;
+  color: #ffffff !important;
 }
 
 .glass-panel-hover {
@@ -108,4 +211,41 @@
 @media (min-width: 768px) {
   .md\:ml-64 { margin-left: 260px; }
 }
+
+/* Global Darker Gray Contrast Overrides */
+.text-slate-400,
+.text-gray-400,
+.text-slate-450 {
+  color: #334155 !important; /* slate-700 (Very Dark Gray) */
+}
+.text-slate-500,
+.text-gray-500 {
+  color: #1e293b !important; /* slate-800 (Charcoal Gray) */
+}
+.border-slate-100,
+.border-gray-150 {
+  border-color: #cbd5e1 !important; /* slate-300 (Clearly Defined Borders) */
+}
+
+/* Header Dropdowns Visibility Contrast Overrides */
+.header-dropdown p {
+  color: rgb(var(--text-primary)) !important;
+}
+.header-dropdown p.text-slate-450,
+.header-dropdown p.text-slate-500,
+.header-dropdown span.text-slate-400,
+.header-dropdown span.text-slate-500,
+.header-dropdown span.text-slate-450 {
+  color: rgb(var(--text-secondary)) !important;
+}
+.header-dropdown span:not(.text-slate-400):not(.text-slate-500):not(.text-slate-450):not(.text-indigo-600) {
+  color: rgb(var(--text-primary)) !important;
+}
+.header-dropdown span.text-indigo-600 {
+  color: rgb(var(--primary)) !important;
+}
+.header-dropdown div {
+  border-color: rgb(var(--border-color)) !important;
+}
+
 
