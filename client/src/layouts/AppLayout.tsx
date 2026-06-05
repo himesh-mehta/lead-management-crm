@@ -4,11 +4,10 @@ import Navbar from '../components/Navbar';
 
 interface AppLayoutProps {
   children: React.ReactNode;
-  title: string;
   onAddLeadClick?: () => void;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children, title, onAddLeadClick }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({ children, onAddLeadClick }) => {
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('sidebar-expanded');
@@ -29,26 +28,22 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, onAddLeadClick }
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-slate-955 text-gray-900 dark:text-slate-100 transition-colors duration-300">
-      {/* Sidebar navigation */}
-      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+    <div className="flex flex-col h-screen overflow-hidden bg-gray-50 dark:bg-slate-955 text-gray-900 dark:text-slate-100 transition-colors duration-300">
+      {/* Sticky top navbar spanning full width */}
+      <Navbar 
+        onAddLeadClick={onAddLeadClick} 
+      />
 
-      {/* Main workspace with smooth layout transitions */}
-      <div 
-        className={`flex-1 flex flex-col h-screen overflow-hidden min-w-0 transition-all duration-300 ease-in-out ${
-          sidebarOpen ? 'md:ml-[260px]' : 'md:ml-[68px]'
-        }`}
-      >
-        {/* Sticky navbar */}
-        <Navbar 
-          title={title} 
-          sidebarOpen={sidebarOpen}
-          toggleSidebar={toggleSidebar} 
-          onAddLeadClick={onAddLeadClick} 
-        />
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Sidebar navigation starting below the header */}
+        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
 
-        {/* Scrollable content container */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-955">
+        {/* Main workspace scrollable content */}
+        <main 
+          className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-slate-955 transition-all duration-300 ease-in-out ${
+            sidebarOpen ? 'md:pl-[260px]' : 'md:pl-[68px]'
+          }`}
+        >
           {children}
         </main>
       </div>

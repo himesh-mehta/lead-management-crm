@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import AppLayout from './layouts/AppLayout';
@@ -13,11 +13,11 @@ import NotFound from './pages/NotFound';
 
 const App: React.FC = () => {
   const location = useLocation();
-  const [pageTitle, setPageTitle] = useState('Dashboard');
 
   // Force light mode
   useEffect(() => {
     document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark');
     localStorage.removeItem('theme');
   }, []);
 
@@ -36,7 +36,6 @@ const App: React.FC = () => {
     else if (path.startsWith('/settings')) title = 'System Settings';
     else title = 'LeadBridge CRM';
 
-    setPageTitle(title);
     document.title = `${title} | LeadBridge CRM`;
   }, [location]);
 
@@ -70,7 +69,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <AppLayout title={pageTitle}>
+      <AppLayout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/leads" element={<Leads />} />

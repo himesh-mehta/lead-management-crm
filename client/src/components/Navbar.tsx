@@ -1,33 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { PanelLeftClose, PanelLeftOpen, Plus, Search, Bell, Clock, LogOut, Settings, Shield, ChevronDown } from 'lucide-react';
+import { Plus, Search, Bell, Clock, LogOut, Settings, Shield, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 interface NavbarProps {
-  title: string;
-  sidebarOpen: boolean;
-  toggleSidebar: () => void;
   onAddLeadClick?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ title, sidebarOpen, toggleSidebar, onAddLeadClick }) => {
+const Navbar: React.FC<NavbarProps> = ({ onAddLeadClick }) => {
   const navigate = useNavigate();
   const [searchFocused, setSearchFocused] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
-  const [greeting, setGreeting] = useState('Welcome back');
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
-
-  // Set greeting based on current time
-  useEffect(() => {
-    const hrs = new Date().getHours();
-    if (hrs < 12) setGreeting('Good morning');
-    else if (hrs < 18) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
-  }, []);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -72,31 +60,21 @@ const Navbar: React.FC<NavbarProps> = ({ title, sidebarOpen, toggleSidebar, onAd
   return (
     <header className="sticky top-0 z-40 h-16 w-full glass-panel border-b border-gray-200 dark:border-slate-805 flex items-center justify-between px-6 transition-colors duration-300">
       
-      {/* Left: Mobile Toggle & Page Header Title / Greeting */}
+      {/* Left: Branding */}
       <div className="flex items-center gap-4">
-        <div className="relative group">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-            aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
-          >
-            {sidebarOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
-          </button>
-          <div className="absolute left-0 top-full mt-1.5 opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 z-50 whitespace-nowrap bg-slate-900 dark:bg-slate-800 text-slate-100 text-[10px] font-bold px-2 py-1.5 rounded-lg shadow-lg border border-slate-700/30 dark:border-slate-700/50">
-            {sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+        {/* Logo and Name */}
+        <div className="flex items-center gap-2.5 mr-2 select-none cursor-pointer">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 shadow-md shadow-indigo-600/20 flex items-center justify-center text-white font-extrabold text-sm tracking-wide">
+            LB
           </div>
-        </div>
-        
-        {/* Greeting & Date Info */}
-        <div className="hidden sm:block text-left">
-          <h2 className="text-xs font-bold text-gray-900 dark:text-white leading-tight flex items-center gap-1.5">
-            <span>{title}</span>
-            <span className="text-slate-300 dark:text-slate-700">|</span>
-            <span className="text-slate-450 dark:text-slate-400 font-semibold">{greeting}, Himesh</span>
-          </h2>
-          <p className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mt-0.5">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-          </p>
+          <div>
+            <h3 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider leading-none">
+              LeadBridge
+            </h3>
+            <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-0.5 leading-none">
+              Workspace
+            </p>
+          </div>
         </div>
       </div>
 

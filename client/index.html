@@ -7,6 +7,13 @@
     <meta name="description" content="LeadBridge CRM — Manage and track your sales leads efficiently in a clean, modern dashboard." />
     <title>LeadBridge CRM</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      try {
+        document.documentElement.classList.remove('dark');
+        if (document.body) document.body.classList.remove('dark');
+        localStorage.removeItem('theme');
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

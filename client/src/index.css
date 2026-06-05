@@ -29,6 +29,8 @@
   body {
     background-color: rgb(var(--bg-main));
     color: rgb(var(--text-primary));
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
