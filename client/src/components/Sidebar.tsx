@@ -35,6 +35,29 @@ const sections = [
   }
 ];
 
+const getHeaderStyles = (title: string) => {
+  switch (title.toLowerCase()) {
+    case 'workspace':
+      return {
+        border: 'border-indigo-500/20 dark:border-indigo-500/10',
+        pill: 'bg-indigo-500 dark:bg-indigo-400',
+        text: 'text-indigo-600 dark:text-indigo-400'
+      };
+    case 'management':
+      return {
+        border: 'border-violet-500/20 dark:border-violet-500/10',
+        pill: 'bg-violet-500 dark:bg-violet-400',
+        text: 'text-violet-600 dark:text-violet-400'
+      };
+    default:
+      return {
+        border: 'border-slate-200 dark:border-slate-800',
+        pill: 'bg-slate-500 dark:bg-slate-400',
+        text: 'text-slate-500 dark:text-slate-400'
+      };
+  }
+};
+
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   return (
     <>
@@ -53,7 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         }`}
       >
         {/* Header Branding / Workspace Selector */}
-        <div className="h-16 px-3.5 border-b border-gray-200/60 dark:border-slate-805/60 flex items-center justify-between">
+        <div className="h-16 px-3.5 border-b-2 border-indigo-500/20 dark:border-indigo-950/50 flex items-center justify-between">
           {isOpen ? (
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-2.5 text-left select-none cursor-pointer p-1.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors flex-1 mr-1">
@@ -91,17 +114,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
 
         {/* Navigation list */}
         <nav className="flex-1 overflow-y-auto py-5 px-2.5 space-y-6">
-          {sections.map((sec, idx) => (
-            <div key={sec.title} className="space-y-1">
-              {isOpen ? (
-                <h4 className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest px-4 mb-2.5">
-                  {sec.title}
-                </h4>
-              ) : idx > 0 ? (
-                <div className="border-t border-slate-100 dark:border-slate-800/80 my-4 mx-2" />
-              ) : null}
+          {sections.map((sec, idx) => {
+            const styles = getHeaderStyles(sec.title);
+            return (
+              <div key={sec.title} className="space-y-1">
+                {isOpen ? (
+                  <div className={`border-b-2 ${styles.border} pb-1.5 mb-2.5 mx-1.5 flex items-center gap-2`}>
+                    <span className={`w-1 h-3 rounded-full ${styles.pill} shadow-xs`} />
+                    <h4 className={`text-[10px] font-bold uppercase tracking-wider ${styles.text}`}>
+                      {sec.title}
+                    </h4>
+                  </div>
+                ) : idx > 0 ? (
+                  <div className="border-t border-slate-100 dark:border-slate-800/80 my-4 mx-2" />
+                ) : null}
 
-              <div className="space-y-0.5">
+                <div className="space-y-0.5">
                 {sec.items.map(({ name, path, icon: Icon, end }) => (
                   <NavLink
                     key={path}
@@ -132,11 +160,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                 ))}
               </div>
             </div>
-          ))}
+          );
+        })}
         </nav>
 
         {/* Bottom Profile & Collapse Toggle */}
-        <div className="border-t border-gray-150 dark:border-slate-800 bg-gray-50/30 dark:bg-slate-900/10 flex flex-col gap-2 p-3 flex-shrink-0">
+        <div className="border-t border-indigo-500/20 dark:border-indigo-950/50 bg-gray-50/30 dark:bg-slate-900/10 flex flex-col gap-2 p-3 flex-shrink-0">
           {isOpen ? (
             <div className="flex items-center gap-3 p-1">
               <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-extrabold flex items-center justify-center border border-indigo-200/30 text-xs flex-shrink-0">
