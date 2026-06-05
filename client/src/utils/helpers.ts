@@ -53,11 +53,16 @@ export const truncateText = (text?: string, length: number = 60): string => {
 /**
  * Generates distinct avatars for male and female leads based on names.
  * @param name 
+ * @param gender
  * @returns 
  */
-export const getAvatarUrl = (name: string): string => {
-  const isFemale = /^(sarah|diana|wanda|natasha|selina|jane|mary|elizabeth|emma|olivia|sophia|isabella|mia|charlotte|amelia|harper|evelyn|abigail)/i.test(name);
+export const getAvatarUrl = (name: string, gender?: string | null): string => {
+  const isFemale = gender 
+    ? gender.toLowerCase() === 'female' 
+    : /^(sarah|diana|wanda|natasha|selina|jane|mary|elizabeth|emma|olivia|sophia|isabella|mia|charlotte|amelia|harper|evelyn|abigail)/i.test(name);
+  
+  const seed = isFemale ? `female_${name}` : `male_${name}`;
   return isFemale 
-    ? `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(name)}&backgroundColor=ffd5dc` 
-    : `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(name)}&backgroundColor=c0aede`;
+    ? `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(seed)}&backgroundColor=ffd5dc` 
+    : `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(seed)}&backgroundColor=c0aede`;
 };

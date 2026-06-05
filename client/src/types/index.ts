@@ -9,6 +9,7 @@ export interface Lead {
   status: LeadStatus;
   source?: string | null;
   notes?: string | null;
+  gender?: 'Male' | 'Female' | null;
   createdAt: string;
   updatedAt?: string | null;
 }
