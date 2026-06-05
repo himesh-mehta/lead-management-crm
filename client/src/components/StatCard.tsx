@@ -43,7 +43,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, growth, trend = 'neut
   const variant = colorVariants[color] || colorVariants.indigo;
 
   return (
-    <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 shadow-soft glass-panel-hover flex flex-col justify-between h-32 relative overflow-hidden transition-all duration-300">
+    <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 shadow-soft hover:-translate-y-1 hover:shadow-md hover:border-indigo-300 dark:hover:border-slate-700 flex flex-col justify-between h-32 relative overflow-hidden transition-all duration-300">
       {/* Upper Section */}
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 tracking-wide">

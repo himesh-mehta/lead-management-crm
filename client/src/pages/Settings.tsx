@@ -8,16 +8,16 @@ import { createLead, getLeads } from '../services/api';
 import { LeadStatus } from '../types';
 
 const MOCK_LEADS = [
-  { name: 'Sarah Connor', email: 'sarah@resistance.net', phone: '+1 (555) 198-4202', company: 'Cyberdyne Systems', status: 'Contacted' as LeadStatus, source: 'Web', notes: 'Interested in structural security assessments and monitoring logs.' },
-  { name: 'Bruce Wayne', email: 'bruce@wayne.corp', phone: '+1 (555) 911-3948', company: 'Wayne Enterprises', status: 'Converted' as LeadStatus, source: 'Referral', notes: 'Interested in bulk contract for defense gear. Transformed to won deal.' },
-  { name: 'Clark Kent', email: 'clark@dailyplanet.press', phone: '+1 (555) 438-1920', company: 'Daily Planet', status: 'New' as LeadStatus, source: 'Web', notes: 'Inquired about digital subscription models and ad placements.' },
-  { name: 'Diana Prince', email: 'diana@themyscira.org', phone: '+1 (555) 728-1039', company: 'Themyscira Museum', status: 'Qualified' as LeadStatus, source: 'Partner', notes: 'Budget approved for historical preservation software suite.' },
-  { name: 'Barry Allen', email: 'barry.speed@ccpd.gov', phone: '+1 (555) 283-9481', company: 'Central City Police Dept', status: 'Contacted' as LeadStatus, source: 'Social Media', notes: 'Demonstrated forensic tracking tool. Follow-up scheduled next Tuesday.' },
-  { name: 'Tony Stark', email: 'tony@stark.industries', phone: '+1 (555) 382-0192', company: 'Stark Industries', status: 'Converted' as LeadStatus, source: 'Referral', notes: 'Purchased enterprise clean-energy grids package.' },
-  { name: 'Peter Parker', email: 'peter@dailybugle.com', phone: '+1 (555) 739-1029', company: 'Daily Bugle', status: 'Lost' as LeadStatus, source: 'Web', notes: 'Pricing too high for freelance photojournalism tracking.' },
-  { name: 'Hal Jordan', email: 'hal@ferris.aero', phone: '+1 (555) 392-1082', company: 'Ferris Aircraft', status: 'New' as LeadStatus, source: 'Partner', notes: 'Looking for flight testing logs management system.' },
-  { name: 'Arthur Curry', email: 'arthur@atlantisshipping.net', phone: '+1 (555) 902-8347', company: 'Atlantis Shipping', status: 'Contacted' as LeadStatus, source: 'Cold-Call', notes: 'Sent quote for deep-sea navigation logs tracker.' },
-  { name: 'Wanda Maximoff', email: 'wanda@westview.net', phone: '+1 (555) 293-1029', company: 'Westview Co', status: 'Qualified' as LeadStatus, source: 'Social Media', notes: 'Wants integration with scheduling platforms.' }
+  { name: 'Sarah Connor', email: 'sarah@resistance.net', phone: '+1 (555) 198-4202', company: 'Cyberdyne Systems', status: 'Contacted' as LeadStatus, source: 'Web', notes: 'Interested in structural security assessments and monitoring logs.', gender: 'Female' },
+  { name: 'Bruce Wayne', email: 'bruce@wayne.corp', phone: '+1 (555) 911-3948', company: 'Wayne Enterprises', status: 'Converted' as LeadStatus, source: 'Referral', notes: 'Interested in bulk contract for defense gear. Transformed to won deal.', gender: 'Male' },
+  { name: 'Clark Kent', email: 'clark@dailyplanet.press', phone: '+1 (555) 438-1920', company: 'Daily Planet', status: 'New' as LeadStatus, source: 'Web', notes: 'Inquired about digital subscription models and ad placements.', gender: 'Male' },
+  { name: 'Diana Prince', email: 'diana@themyscira.org', phone: '+1 (555) 728-1039', company: 'Themyscira Museum', status: 'Qualified' as LeadStatus, source: 'Partner', notes: 'Budget approved for historical preservation software suite.', gender: 'Female' },
+  { name: 'Barry Allen', email: 'barry.speed@ccpd.gov', phone: '+1 (555) 283-9481', company: 'Central City Police Dept', status: 'Contacted' as LeadStatus, source: 'Social Media', notes: 'Demonstrated forensic tracking tool. Follow-up scheduled next Tuesday.', gender: 'Male' },
+  { name: 'Tony Stark', email: 'tony@stark.industries', phone: '+1 (555) 382-0192', company: 'Stark Industries', status: 'Converted' as LeadStatus, source: 'Referral', notes: 'Purchased enterprise clean-energy grids package.', gender: 'Male' },
+  { name: 'Peter Parker', email: 'peter@dailybugle.com', phone: '+1 (555) 739-1029', company: 'Daily Bugle', status: 'Lost' as LeadStatus, source: 'Web', notes: 'Pricing too high for freelance photojournalism tracking.', gender: 'Male' },
+  { name: 'Hal Jordan', email: 'hal@ferris.aero', phone: '+1 (555) 392-1082', company: 'Ferris Aircraft', status: 'New' as LeadStatus, source: 'Partner', notes: 'Looking for flight testing logs management system.', gender: 'Male' },
+  { name: 'Arthur Curry', email: 'arthur@atlantisshipping.net', phone: '+1 (555) 902-8347', company: 'Atlantis Shipping', status: 'Contacted' as LeadStatus, source: 'Cold-Call', notes: 'Sent quote for deep-sea navigation logs tracker.', gender: 'Male' },
+  { name: 'Wanda Maximoff', email: 'wanda@westview.net', phone: '+1 (555) 293-1029', company: 'Westview Co', status: 'Qualified' as LeadStatus, source: 'Social Media', notes: 'Wants integration with scheduling platforms.', gender: 'Female' }
 ];
 
 const Settings: React.FC = () => {

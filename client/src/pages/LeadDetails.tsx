@@ -142,7 +142,7 @@ const LeadDetails: React.FC = () => {
             <ArrowLeft size={16} />
           </button>
           
-          <img src={getAvatarUrl(lead.name)} alt="" className="w-11 h-11 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
+          <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-11 h-11 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
           
           <div>
             <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2.5">

@@ -228,8 +228,8 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
             </div>
           </div>
 
-          {/* Pipeline Status & Lead Source grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Pipeline Status & Lead Source & Gender grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Status */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400 mb-1.5">
@@ -286,6 +286,33 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
                   <option value="Cold-Call">Cold Calling</option>
                   <option value="Social Media">Social Media</option>
                   <option value="Partner">External Partner</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400 mb-1.5">
+                Gender
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                  <User size={16} />
+                </span>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField('gender')}
+                  onBlur={() => setFocusedField('')}
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-white dark:bg-slate-900 text-sm transition-all focus:outline-none focus:ring-2 dark:text-white appearance-none ${
+                    focusedField === 'gender'
+                      ? 'border-indigo-500 focus:ring-indigo-500/20'
+                      : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
             </div>

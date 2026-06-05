@@ -43,7 +43,7 @@ app.use(
 // ─── Health Check ────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => {
   res.json({
-    message: 'LeadFlow CRM API Running',
+    message: 'LeadBridge CRM API Running',
     database: 'Neon PostgreSQL',
     version: '1.0.0',
     status: 'healthy',
@@ -83,7 +83,7 @@ const start = async () => {
 
     app.listen(PORT, () => {
       console.log(
-        `🚀 LeadFlow CRM Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`
+        `🚀 LeadBridge CRM Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`
       );
     });
   } catch (err) {

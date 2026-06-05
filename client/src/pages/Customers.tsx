@@ -127,7 +127,7 @@ const Customers: React.FC = () => {
                     {/* Name & Company */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <img src={getAvatarUrl(customer.name)} alt="" className="w-9 h-9 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
+                        <img src={getAvatarUrl(customer.name, customer.gender)} alt="" className="w-9 h-9 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
                         <div>
                           <div 
                             className="font-bold text-gray-900 dark:text-gray-100 hover:underline cursor-pointer"

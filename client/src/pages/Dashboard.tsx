@@ -245,7 +245,7 @@ const Dashboard: React.FC = () => {
               {mockFollowUps.map(task => (
                 <div 
                   key={task.id} 
-                  className="p-3 rounded-xl border border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-850/30 hover:border-indigo-300 transition-colors cursor-pointer"
+                  className="p-3 rounded-xl border border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-850/30 hover:-translate-y-0.5 hover:shadow-sm hover:border-indigo-300 transition-all duration-300 cursor-pointer"
                   onClick={() => navigate(`/leads/${task.id}`)}
                 >
                   <div className="flex justify-between items-start">
@@ -283,7 +283,7 @@ const Dashboard: React.FC = () => {
                 <div key={lead.id} className="relative text-xs">
                   <div className="flex items-start gap-2.5">
                     <div className="relative flex-shrink-0">
-                      <img src={getAvatarUrl(lead.name)} alt="" className="w-7 h-7 rounded-full border border-gray-205 shadow-sm" />
+                      <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-7 h-7 rounded-full border border-gray-205 shadow-sm" />
                       <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5 rounded-full border border-white bg-white items-center justify-center">
                         <span className={`h-1.5 w-1.5 rounded-full ${
                           lead.status === 'Converted' ? 'bg-emerald-500' :

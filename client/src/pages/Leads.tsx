@@ -367,7 +367,7 @@ const Leads: React.FC = () => {
                           className="px-6 py-4 font-bold text-gray-900 dark:text-white hover:underline cursor-pointer flex items-center gap-2.5"
                           onClick={() => navigate(`/leads/${lead.id}`)}
                         >
-                          <img src={getAvatarUrl(lead.name)} alt="" className="w-8 h-8 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
+                          <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-8 h-8 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
                           <span>{lead.name}</span>
                         </td>
                         <td className="px-6 py-4 text-gray-750 dark:text-slate-350">{lead.company}</td>
@@ -437,7 +437,7 @@ const Leads: React.FC = () => {
                           {isChecked ? <CheckSquare size={16} className="text-indigo-650" /> : <Square size={16} />}
                         </button>
                         
-                        <img src={getAvatarUrl(lead.name)} alt="" className="w-9 h-9 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
+                        <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-9 h-9 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
                         
                         <div>
                           <h4 

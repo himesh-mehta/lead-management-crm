@@ -1,7 +1,7 @@
 {
-  "name": "leadflow-crm",
+  "name": "leadbridge-crm",
   "version": "1.0.0",
-  "description": "LeadFlow CRM - Lead Management System REST API (Neon PostgreSQL + Drizzle ORM)",
+  "description": "LeadBridge CRM - Lead Management System REST API (Neon PostgreSQL + Drizzle ORM)",
   "main": "server/index.js",
   "scripts": {
     "dev": "nodemon server/index.js",

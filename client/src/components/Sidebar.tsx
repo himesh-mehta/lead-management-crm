@@ -53,11 +53,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         {/* Header Branding */}
         <div className="h-16 px-6 border-b border-gray-200/60 dark:border-slate-800/60 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-indigo-600 shadow-md shadow-indigo-600/20 flex items-center justify-center text-white font-extrabold text-sm tracking-wide">
-              L
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 shadow-md shadow-indigo-600/20 flex items-center justify-center text-white font-extrabold text-xs tracking-wide">
+              LB
             </div>
             <span className="font-extrabold text-gray-900 dark:text-white tracking-tight text-sm uppercase">
-              LeadFlow <span className="text-indigo-600 dark:text-indigo-400 font-medium">CRM</span>
+              LeadBridge <span className="text-indigo-600 dark:text-indigo-400 font-medium">CRM</span>
             </span>
           </div>
 

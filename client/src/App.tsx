@@ -34,10 +34,10 @@ const App: React.FC = () => {
     else if (path.startsWith('/stats') || path.startsWith('/statistics')) title = 'Pipeline Analytics';
     else if (path.startsWith('/customers')) title = 'Converted Customers';
     else if (path.startsWith('/settings')) title = 'System Settings';
-    else title = 'LeadFlow CRM';
+    else title = 'LeadBridge CRM';
 
     setPageTitle(title);
-    document.title = `${title} | LeadFlow CRM`;
+    document.title = `${title} | LeadBridge CRM`;
   }, [location]);
 
   const isNotFound = ![
