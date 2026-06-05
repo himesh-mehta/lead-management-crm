@@ -43,9 +43,17 @@ export const useCreateLeadMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createLead,
-    onSuccess: () => {
-      // Invalidate queries to refresh lists
-      queryClient.invalidateQueries({ queryKey: ['leads'] });
+    onSuccess: (newLead) => {
+      // Optimistically prepend the new lead to ALL cached lead list queries
+      queryClient.setQueriesData<any>({ queryKey: ['leads'] }, (old: any) => {
+        if (!old?.leads) return old;
+        return {
+          ...old,
+          leads: [newLead, ...old.leads],
+          total: (old.total || 0) + 1,
+        };
+      });
+      // Also invalidate to keep stats and server in sync
       queryClient.invalidateQueries({ queryKey: ['stats'] });
     },
   });

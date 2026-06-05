@@ -60,8 +60,9 @@
 }
 .glass-sidebar a.active {
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-left-color: #ff7a59 !important; /* HubSpot active orange bar */
+  background: rgba(255, 122, 89, 0.18) !important;
+  border-left-color: #ff7a59 !important;
+  border-left-width: 4px !important;
 }
 .glass-sidebar svg {
   stroke: #ffffff !important;
@@ -227,6 +228,73 @@
   border-color: #cbd5e1 !important; /* slate-300 (Clearly Defined Borders) */
 }
 
+/* ========== CRM Select Dropdown ========== */
+.crm-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0.375rem 2rem 0.375rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  background-size: 0.8rem;
+  font-size: 0.75rem;
+  color: #374151;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  min-width: 9rem;
+}
+.crm-select:focus {
+  outline: none;
+  border-color: #ff7a59;
+  box-shadow: 0 0 0 3px rgba(255, 122, 89, 0.15);
+}
+.crm-select:hover {
+  border-color: #cbd5e1;
+}
+.crm-select option {
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  color: #374151;
+  background-color: #ffffff;
+}
+
+/* ========== Action Icon Tooltip ========== */
+.action-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.85);
+  transform-origin: bottom center;
+  background: #1e293b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.08s ease, transform 0.08s ease;
+  z-index: 60;
+}
+.action-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: #1e293b;
+}
+.group\/tip:hover .action-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* ========== Header Dropdowns Visibility Contrast Overrides ========== */
 /* Header Dropdowns Visibility Contrast Overrides */
 .header-dropdown p {
   color: rgb(var(--text-primary)) !important;
@@ -248,4 +316,43 @@
   border-color: rgb(var(--border-color)) !important;
 }
 
+/* ========== Custom Dropdown Animation ========== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0.92) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+.animate-scale-in {
+  animation: scaleIn 0.12s ease forwards;
+  transform-origin: top;
+}
 
+/* ========== New Lead Row Highlight ========== */
+@keyframes newLeadFlash {
+  0%   { background-color: rgba(16, 185, 129, 0.25); box-shadow: inset 0 0 0 2px rgba(16, 185, 129, 0.5); }
+  60%  { background-color: rgba(16, 185, 129, 0.10); box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.2); }
+  100% { background-color: transparent; box-shadow: none; }
+}
+.new-lead-highlight {
+  animation: newLeadFlash 3s ease forwards;
+}
+
+/* ========== Card View Entrance Animation ========== */
+@keyframes cardFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.card-enter {
+  animation: cardFadeUp 0.35s ease both;
+}

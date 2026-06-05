@@ -488,10 +488,10 @@ const Dashboard: React.FC = () => {
       </motion.div>
 
       {/* Grid: Activity Timeline, Upcoming Followups, Additional Widgets */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
         
         {/* Left/Middle spans: Recent Leads Table & Activity timeline */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 flex flex-col gap-6">
           
           {/* Recent Leads Table Widget */}
           <div className="p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-soft">
@@ -547,7 +547,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Activity Logs Timeline */}
-          <div className="p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-soft">
+          <div className="p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-soft flex-1">
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-5">
               Intake & Activity Log
             </h3>
@@ -591,7 +591,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Right timeline and widgets list */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           
           {/* Upcoming follow-ups widget */}
           <div className="p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-soft">
@@ -657,7 +657,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Performance Widgets (Pipeline Health & Response Times) */}
-          <div className="p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-soft space-y-4">
+          <div className="p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-2xl shadow-soft space-y-4 flex-1">
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-2">
               Pipeline Health Score
             </h3>

@@ -100,10 +100,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                       if (window.innerWidth < 768) toggleSidebar();
                     }}
                     className={({ isActive }) =>
-                      `flex items-center ${isOpen ? 'justify-between px-3.5' : 'justify-center px-1'} py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 border-l-2 group relative ${
+                      `flex items-center ${isOpen ? 'justify-between px-3.5' : 'justify-center px-1'} py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 border-l-4 group relative ${
                         isActive
-                          ? 'bg-indigo-50/40 dark:bg-indigo-950/10 text-indigo-600 dark:text-indigo-400 border-indigo-600 shadow-xs'
-                          : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-50/20 dark:hover:bg-slate-800/20 border-transparent'
+                          ? 'bg-orange-500/15 text-white border-orange-400 shadow-xs'
+                          : 'text-slate-400 hover:text-white border-transparent hover:bg-white/8'
                       }`
                     }
                   >

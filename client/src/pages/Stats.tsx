@@ -124,9 +124,8 @@ const Stats: React.FC = () => {
     <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in pb-24">
       {/* Title Header */}
       <div className="border-b border-gray-150 dark:border-slate-800 pb-5">
-        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2">
-          <BarChart3 className="text-indigo-650" size={20} />
-          <span>Pipeline Analytics</span>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+          Pipeline Analytics
         </h1>
         <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
           Monitor acquisition velocity, lead conversion ratios, and corporate revenue forecasts

@@ -20,6 +20,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import LeadModal from '../components/LeadModal';
 import EmptyState from '../components/EmptyState';
+import CrmSelect from '../components/CrmSelect';
 import { formatDate, getAvatarUrl } from '../utils/helpers';
 
 const Leads: React.FC = () => {
@@ -44,6 +45,9 @@ const Leads: React.FC = () => {
   // Bulk Actions
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkStatusOpen, setBulkStatusOpen] = useState(false);
+
+  // Newly added lead highlight
+  const [newLeadId, setNewLeadId] = useState<number | null>(null);
 
   // Fetch leads via React Query
   const { data, isLoading, refetch } = useLeadsQuery({
@@ -110,9 +114,14 @@ const Leads: React.FC = () => {
       );
     } else {
       createMutation.mutate(formData, {
-        onSuccess: () => {
+        onSuccess: (created: any) => {
           toast.success('Lead added successfully!');
           setModalOpen(false);
+          // Highlight the new row for 3 seconds
+          if (created?.id) {
+            setNewLeadId(created.id);
+            setTimeout(() => setNewLeadId(null), 3000);
+          }
         },
         onError: (err: any) => {
           const msg = err.response?.data?.message || 'Failed to create lead';
@@ -189,14 +198,14 @@ const Leads: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in relative min-h-screen pb-24">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in">
       {/* Header action panel */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-gray-150">
         <div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+          <h1 className="text-xl font-bold text-gray-900 tracking-tight">
             Leads Pipeline Directory
           </h1>
-          <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 mt-1">
             Qualify contacts, execute status transitions, and audit deals
           </p>
         </div>
@@ -206,7 +215,10 @@ const Leads: React.FC = () => {
             setEditLead(null);
             setModalOpen(true);
           }}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-indigo-650 hover:bg-indigo-700 shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-[0.98] transition-all rounded-xl self-start sm:self-center"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white rounded-xl self-start sm:self-center transition-all active:scale-[0.98] shadow-md"
+          style={{ backgroundColor: '#ff7a59' }}
+          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#e5431c')}
+          onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#ff7a59')}
         >
           <Plus size={15} />
           <span>Add Lead</span>
@@ -223,89 +235,98 @@ const Leads: React.FC = () => {
           }}
         />
       ) : (
-        <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
+        <div className="bg-white border border-gray-150 rounded-2xl shadow-soft overflow-hidden">
           
           {/* Advanced toolbar */}
-          <div className="p-4 border-b border-gray-150 dark:border-slate-800 flex flex-col xl:flex-row gap-4 items-center justify-between bg-gray-50/50 dark:bg-slate-900/50">
+          <div className="p-4 border-b border-gray-150 flex flex-col xl:flex-row gap-3 items-center justify-between bg-gray-50/50">
             {/* Search */}
-            <div className="relative w-full xl:w-80">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            <div className="relative w-full xl:w-72">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
                 type="text"
                 placeholder="Search name, email, phone, company..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-xs focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:text-white"
+                className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl bg-white text-xs focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20"
               />
             </div>
 
             {/* View selectors, status, sorting filters */}
-            <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto justify-end">
+            <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-end">
               {/* Table/Card View Toggle Buttons */}
-              <div className="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl border border-gray-200 dark:border-slate-750">
+              <div className="flex items-center bg-gray-100 p-1 rounded-xl border border-gray-200">
                 <button
                   onClick={() => setViewMode('table')}
-                  className={`p-1.5 rounded-lg transition-colors ${viewMode === 'table' ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-gray-400 hover:text-gray-650'}`}
+                  className={`p-1.5 rounded-lg transition-colors ${viewMode === 'table' ? 'bg-white text-orange-500 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
                   title="Table View"
                 >
-                  <List size={15} />
+                  <List size={14} />
                 </button>
                 <button
                   onClick={() => setViewMode('card')}
-                  className={`p-1.5 rounded-lg transition-colors ${viewMode === 'card' ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-gray-400 hover:text-gray-650'}`}
+                  className={`p-1.5 rounded-lg transition-colors ${viewMode === 'card' ? 'bg-white text-orange-500 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
                   title="Card View"
                 >
-                  <LayoutGrid size={15} />
+                  <LayoutGrid size={14} />
                 </button>
               </div>
 
               {/* Status filter */}
-              <select
+              <CrmSelect
                 value={statusFilter}
-                onChange={handleStatusChange}
-                className="px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-850 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-350 focus:outline-none"
-              >
-                <option value="">All Statuses</option>
-                <option value="New">New</option>
-                <option value="Contacted">Contacted</option>
-                <option value="Qualified">Qualified</option>
-                <option value="Converted">Converted</option>
-                <option value="Lost">Lost</option>
-              </select>
+                onChange={(v) => { setStatusFilter(v); setPage(1); }}
+                options={[
+                  { value: '', label: 'All Statuses' },
+                  { value: 'Contacted', label: 'Contacted' },
+                  { value: 'Converted', label: 'Converted' },
+                  { value: 'Lost', label: 'Lost' },
+                  { value: 'New', label: 'New' },
+                  { value: 'Qualified', label: 'Qualified' },
+                ]}
+              />
 
               {/* Source filter */}
-              <select
+              <CrmSelect
                 value={sourceFilter}
-                onChange={handleSourceChange}
-                className="px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-850 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-350 focus:outline-none"
-              >
-                <option value="">All Sources</option>
-                <option value="Web">Web</option>
-                <option value="Referral">Referral</option>
-                <option value="Cold-Call">Cold-Call</option>
-                <option value="Social Media">Social Media</option>
-                <option value="Partner">Partner</option>
-              </select>
+                onChange={(v) => { setSourceFilter(v); setPage(1); }}
+                options={[
+                  { value: '', label: 'All Sources' },
+                  { value: 'Cold-Call', label: 'Cold-Call' },
+                  { value: 'Partner', label: 'Partner' },
+                  { value: 'Referral', label: 'Referral' },
+                  { value: 'Social Media', label: 'Social Media' },
+                  { value: 'Web', label: 'Web' },
+                ]}
+              />
 
               {/* Sort field */}
-              <select
+              <CrmSelect
                 value={sortField}
-                onChange={handleSortChange}
-                className="px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-850 bg-white dark:bg-slate-900 text-xs text-gray-700 dark:text-slate-350 focus:outline-none"
-              >
-                <option value="created_at">Sort: Created Date</option>
-                <option value="name">Sort: Full Name</option>
-                <option value="company">Sort: Company</option>
-                <option value="status">Sort: Status</option>
-              </select>
+                onChange={(v) => { setSortField(v); setPage(1); }}
+                options={[
+                  { value: 'company', label: 'Sort: Company' },
+                  { value: 'created_at', label: 'Sort: Created Date' },
+                  { value: 'name', label: 'Sort: Full Name' },
+                  { value: 'status', label: 'Sort: Status' },
+                ]}
+              />
 
-              <button
-                onClick={() => refetch()}
-                className="p-2 border border-gray-200 dark:border-slate-850 rounded-xl bg-white dark:bg-slate-900 text-gray-400 hover:text-gray-650 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
-                title="Refresh leads"
-              >
-                <RefreshCw size={15} />
-              </button>
+              <div className="relative group/tip">
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setStatusFilter('');
+                    setSourceFilter('');
+                    setSortField('created_at');
+                    setPage(1);
+                    refetch();
+                  }}
+                  className="p-2 border border-gray-200 rounded-xl bg-white text-gray-400 hover:text-orange-500 hover:border-orange-300 hover:bg-orange-50 transition-all"
+                >
+                  <RefreshCw size={14} />
+                </button>
+                <div className="action-tooltip whitespace-nowrap">Reset Filters</div>
+              </div>
             </div>
           </div>
 
@@ -323,92 +344,118 @@ const Leads: React.FC = () => {
           ) : viewMode === 'table' ? (
             /* DESKTOP TABLE VIEW */
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-left text-xs">
+              <table className="w-full border-collapse text-left text-xs table-fixed">
+                <colgroup>
+                  <col style={{ width: '40px' }} />
+                  <col style={{ width: '18%' }} />
+                  <col style={{ width: '15%' }} />
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '10%' }} />
+                  <col style={{ width: '22%' }} />
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '100px' }} />
+                </colgroup>
                 <thead>
-                  <tr className="bg-gray-50/50 dark:bg-slate-905/80 text-gray-500 dark:text-slate-400 font-semibold border-b border-gray-150 dark:border-slate-800">
-                    <th className="px-6 py-3.5 w-10">
-                      <button onClick={handleSelectAll} className="text-gray-400 hover:text-indigo-650">
+                  <tr className="bg-gray-50/80 text-gray-500 font-semibold border-b border-gray-150">
+                    <th className="px-4 py-3">
+                      <button onClick={handleSelectAll} className="text-gray-400 hover:text-orange-500 transition-colors">
                         {selectedIds.length === filteredLeads.length ? (
-                          <CheckSquare size={16} className="text-indigo-650" />
+                          <CheckSquare size={15} className="text-orange-500" />
                         ) : (
-                          <Square size={16} />
+                          <Square size={15} />
                         )}
                       </button>
                     </th>
-                    <th className="px-6 py-3.5">Name</th>
-                    <th className="px-6 py-3.5">Company</th>
-                    <th className="px-6 py-3.5">Status</th>
-                    <th className="px-6 py-3.5">Source</th>
-                    <th className="px-6 py-3.5">Contact Details</th>
-                    <th className="px-6 py-3.5">Created Date</th>
-                    <th className="px-6 py-3.5 text-right">Actions</th>
+                    <th className="px-3 py-3">Name</th>
+                    <th className="px-3 py-3">Company</th>
+                    <th className="px-3 py-3">Status</th>
+                    <th className="px-3 py-3">Source</th>
+                    <th className="px-3 py-3">Contact Details</th>
+                    <th className="px-3 py-3">Created Date</th>
+                    <th className="px-3 py-3 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-slate-850">
+                <tbody className="divide-y divide-gray-100">
                   {filteredLeads.map((lead) => {
                     const isChecked = selectedIds.includes(lead.id);
+                    const isNew = lead.id === newLeadId;
                     return (
                       <tr 
                         key={lead.id} 
-                        className={`hover:bg-gray-50/40 dark:hover:bg-slate-800/40 transition-colors ${
-                          isChecked ? 'bg-indigo-50/20 dark:bg-indigo-950/10' : ''
+                        className={`transition-colors ${
+                          isNew
+                            ? 'new-lead-highlight'
+                            : isChecked
+                            ? 'bg-orange-50/30 hover:bg-orange-50/50'
+                            : 'hover:bg-gray-50/60'
                         }`}
                       >
-                        <td className="px-6 py-4">
-                          <button onClick={() => handleSelectOne(lead.id)} className="text-gray-400 hover:text-indigo-650">
+                        <td className="px-4 py-3">
+                          <button onClick={() => handleSelectOne(lead.id)} className="text-gray-400 hover:text-orange-500 transition-colors">
                             {isChecked ? (
-                              <CheckSquare size={16} className="text-indigo-650" />
+                              <CheckSquare size={15} className="text-orange-500" />
                             ) : (
-                              <Square size={16} />
+                              <Square size={15} />
                             )}
                           </button>
                         </td>
                         <td 
-                          className="px-6 py-4 font-bold text-gray-900 dark:text-white hover:underline cursor-pointer flex items-center gap-2.5"
+                          className="px-3 py-3 font-bold text-gray-900 hover:underline cursor-pointer"
                           onClick={() => navigate(`/leads/${lead.id}`)}
                         >
-                          <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-8 h-8 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
-                          <span>{lead.name}</span>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-7 h-7 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
+                            <span className="truncate">{lead.name}</span>
+                          </div>
                         </td>
-                        <td className="px-6 py-4 text-gray-750 dark:text-slate-350">{lead.company}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-3 py-3 text-gray-600 truncate">{lead.company}</td>
+                        <td className="px-3 py-3">
                           <StatusBadge status={lead.status} />
                         </td>
-                        <td className="px-6 py-4">
-                          <span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 font-medium">
+                        <td className="px-3 py-3">
+                          <span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-gray-600 font-medium whitespace-nowrap">
                             {lead.source || 'Web'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-xs text-gray-500 dark:text-slate-400 space-y-0.5">
-                          <div className="flex items-center gap-1.5"><Mail size={12} /> {lead.email}</div>
-                          <div className="flex items-center gap-1.5"><Phone size={12} /> {lead.phone}</div>
+                        <td className="px-3 py-3 text-xs text-gray-500 space-y-0.5">
+                          <div className="flex items-center gap-1.5 truncate"><Mail size={11} className="flex-shrink-0" /> <span className="truncate">{lead.email}</span></div>
+                          <div className="flex items-center gap-1.5"><Phone size={11} className="flex-shrink-0" /> {lead.phone}</div>
                         </td>
-                        <td className="px-6 py-4 text-xs text-gray-500 dark:text-slate-400">
+                        <td className="px-3 py-3 text-xs text-gray-500 whitespace-nowrap">
                           {formatDate(lead.createdAt)}
                         </td>
-                        <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex justify-end gap-1.5">
-                            <button 
-                              onClick={() => navigate(`/leads/${lead.id}`)} 
-                              className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-all"
-                              title="View details"
-                            >
-                              <Eye size={14} />
-                            </button>
-                            <button 
-                              onClick={() => { setEditLead(lead); setModalOpen(true); }} 
-                              className="p-1.5 rounded-lg text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-all"
-                              title="Edit"
-                            >
-                              <Edit2 size={14} />
-                            </button>
-                            <button 
-                              onClick={() => { setDeleteId(lead.id); setDeleteOpen(true); }} 
-                              className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all"
-                              title="Delete"
-                            >
-                              <Trash2 size={14} />
-                            </button>
+                        <td className="px-3 py-3" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex justify-center gap-1">
+                            {/* View */}
+                            <div className="relative group/tip">
+                              <button 
+                                onClick={() => navigate(`/leads/${lead.id}`)} 
+                                className="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-indigo-100 hover:text-indigo-600 transition-all"
+                              >
+                                <Eye size={13} />
+                              </button>
+                              <div className="action-tooltip">See Details</div>
+                            </div>
+                            {/* Edit */}
+                            <div className="relative group/tip">
+                              <button 
+                                onClick={() => { setEditLead(lead); setModalOpen(true); }} 
+                                className="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-indigo-100 hover:text-indigo-600 transition-all"
+                              >
+                                <Edit2 size={13} />
+                              </button>
+                              <div className="action-tooltip">Edit</div>
+                            </div>
+                            {/* Delete */}
+                            <div className="relative group/tip">
+                              <button 
+                                onClick={() => { setDeleteId(lead.id); setDeleteOpen(true); }} 
+                                className="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-600 transition-all"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                              <div className="action-tooltip">Delete</div>
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -419,70 +466,137 @@ const Leads: React.FC = () => {
             </div>
           ) : (
             /* PREMIUM CARD VIEW */
-            <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-50/30 dark:bg-slate-900/30">
-              {filteredLeads.map((lead) => {
+            <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 bg-gray-50/40">
+              {filteredLeads.map((lead, idx) => {
                 const isChecked = selectedIds.includes(lead.id);
+                const isNew = lead.id === newLeadId;
+
+                // Status accent colors
+                const statusAccent: Record<string, string> = {
+                  New:       'from-blue-500 to-blue-400',
+                  Contacted: 'from-amber-500 to-amber-400',
+                  Qualified: 'from-purple-500 to-purple-400',
+                  Converted: 'from-emerald-500 to-emerald-400',
+                  Lost:      'from-red-500 to-red-400',
+                };
+                const accent = statusAccent[lead.status] || 'from-gray-400 to-gray-300';
+
                 return (
-                  <div 
+                  <div
                     key={lead.id}
-                    className={`p-5 rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer ${
-                      isChecked 
-                        ? 'border-indigo-500 bg-indigo-50/5 dark:bg-indigo-950/10' 
-                        : 'border-gray-150 bg-white dark:border-slate-800 dark:bg-slate-900 hover:border-indigo-500/40 dark:hover:border-indigo-500/30 shadow-soft'
-                    }`}
+                    onClick={() => navigate(`/leads/${lead.id}`)}
+                    className={`card-enter group relative rounded-2xl border overflow-hidden cursor-pointer flex flex-col
+                      shadow-sm transition-all duration-300
+                      hover:-translate-y-2 hover:shadow-xl hover:shadow-gray-200/80
+                      ${ isNew ? 'ring-2 ring-emerald-400 ring-offset-2' : '' }
+                      ${ isChecked ? 'border-orange-400 bg-orange-50/30' : 'border-gray-150 bg-white' }`}
+                    style={{ animationDelay: `${idx * 45}ms` }}
                   >
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-2.5">
-                        <button onClick={() => handleSelectOne(lead.id)} className="text-gray-400 flex-shrink-0">
-                          {isChecked ? <CheckSquare size={16} className="text-indigo-650" /> : <Square size={16} />}
+                    {/* Coloured top accent bar */}
+                    <div className={`h-1.5 w-full bg-gradient-to-r ${accent} flex-shrink-0`} />
+
+                    {/* Card body */}
+                    <div className="p-4 flex flex-col gap-3 flex-1">
+
+                      {/* Top row: avatar + name + checkbox */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="relative flex-shrink-0">
+                            <img
+                              src={getAvatarUrl(lead.name, lead.gender)}
+                              alt=""
+                              className="w-10 h-10 rounded-full border-2 border-white shadow-md"
+                            />
+                            {/* Status dot */}
+                            <span
+                              className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white bg-gradient-to-br ${accent}`}
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="font-bold text-gray-900 text-xs leading-tight truncate group-hover:text-orange-600 transition-colors">
+                              {lead.name}
+                            </h4>
+                            <span className="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5 truncate">
+                              <Building2 size={9} className="flex-shrink-0" />
+                              {lead.company}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Checkbox */}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleSelectOne(lead.id); }}
+                          className="flex-shrink-0 mt-0.5 text-gray-300 hover:text-orange-500 transition-colors"
+                        >
+                          {isChecked
+                            ? <CheckSquare size={15} className="text-orange-500" />
+                            : <Square size={15} />}
                         </button>
-                        
-                        <img src={getAvatarUrl(lead.name, lead.gender)} alt="" className="w-9 h-9 rounded-full border border-gray-150 shadow-sm flex-shrink-0" />
-                        
-                        <div>
-                          <h4 
-                            className="font-bold text-gray-900 dark:text-white hover:underline cursor-pointer text-sm leading-tight"
-                            onClick={() => navigate(`/leads/${lead.id}`)}
-                          >
-                            {lead.name}
-                          </h4>
-                          <span className="text-[11px] text-gray-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-                            <Building2 size={11} /> {lead.company}
+                      </div>
+
+                      {/* Status badge */}
+                      <div>
+                        <StatusBadge status={lead.status} />
+                      </div>
+
+                      {/* Contact details */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-[11px] text-gray-500 truncate">
+                          <div className="w-5 h-5 rounded-md bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <Mail size={10} className="text-gray-400" />
+                          </div>
+                          <span className="truncate">{lead.email}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[11px] text-gray-500">
+                          <div className="w-5 h-5 rounded-md bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <Phone size={10} className="text-gray-400" />
+                          </div>
+                          <span>{lead.phone}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[11px] text-gray-500">
+                          <div className="w-5 h-5 rounded-md bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <Globe size={10} className="text-gray-400" />
+                          </div>
+                          <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-gray-600 text-[10px] font-medium">
+                            {lead.source || 'Web'}
                           </span>
                         </div>
                       </div>
 
-                      <StatusBadge status={lead.status} />
-                    </div>
+                      {/* Footer: date + actions */}
+                      <div className="flex items-center justify-between pt-2.5 border-t border-gray-100 mt-auto">
+                        <span className="text-[10px] text-gray-400 flex items-center gap-1">
+                          <Calendar size={9} />
+                          {formatDate(lead.createdAt)}
+                        </span>
 
-                    <div className="my-4 space-y-2 text-xs text-gray-500 dark:text-slate-400">
-                      <div className="flex items-center gap-2"><Mail size={12} /> {lead.email}</div>
-                      <div className="flex items-center gap-2"><Phone size={12} /> {lead.phone}</div>
-                      <div className="flex items-center gap-2"><Globe size={12} /> Source: {lead.source || 'Web'}</div>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-50 dark:border-slate-850">
-                      <span className="text-[10px] text-gray-400"><Calendar size={10} className="inline mr-1" />{formatDate(lead.createdAt)}</span>
-                      
-                      <div className="flex gap-1">
-                        <button 
-                          onClick={() => navigate(`/leads/${lead.id}`)}
-                          className="p-1 rounded text-gray-400 hover:text-indigo-600"
+                        {/* Action buttons */}
+                        <div
+                          className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <Eye size={14} />
-                        </button>
-                        <button 
-                          onClick={() => { setEditLead(lead); setModalOpen(true); }}
-                          className="p-1 rounded text-gray-400 hover:text-indigo-600"
-                        >
-                          <Edit2 size={14} />
-                        </button>
-                        <button 
-                          onClick={() => { setDeleteId(lead.id); setDeleteOpen(true); }}
-                          className="p-1 rounded text-gray-400 hover:text-red-600"
-                        >
-                          <Trash2 size={14} />
-                        </button>
+                          <button
+                            onClick={() => navigate(`/leads/${lead.id}`)}
+                            className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 flex items-center justify-center transition-all"
+                            title="View"
+                          >
+                            <Eye size={11} />
+                          </button>
+                          <button
+                            onClick={() => { setEditLead(lead); setModalOpen(true); }}
+                            className="w-6 h-6 rounded-lg bg-gray-100 text-gray-500 hover:bg-amber-50 hover:text-amber-600 flex items-center justify-center transition-all"
+                            title="Edit"
+                          >
+                            <Edit2 size={11} />
+                          </button>
+                          <button
+                            onClick={() => { setDeleteId(lead.id); setDeleteOpen(true); }}
+                            className="w-6 h-6 rounded-lg bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-600 flex items-center justify-center transition-all"
+                            title="Delete"
+                          >
+                            <Trash2 size={11} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -493,7 +607,7 @@ const Leads: React.FC = () => {
 
           {/* Pagination Footer */}
           {totalPages > 1 && (
-            <div className="p-4 border-t border-gray-150 dark:border-slate-800">
+            <div className="p-4 border-t border-gray-150">
               <Pagination
                 currentPage={page}
                 totalPages={totalPages}
@@ -504,38 +618,39 @@ const Leads: React.FC = () => {
         </div>
       )}
 
-      {/* Floating Bulk Actions drawer */}
+      {/* Floating Bulk Actions bar - fixed at bottom center */}
       <AnimatePresence>
         {selectedIds.length > 0 && (
           <motion.div 
-            initial={{ y: 50, opacity: 0 }}
+            initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 50, opacity: 0 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-4 z-40 border border-slate-800"
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 z-50 border border-slate-700"
           >
-            <span className="text-xs font-bold text-slate-200">
-              {selectedIds.length} leads selected
+            <span className="text-xs font-bold text-slate-200 whitespace-nowrap">
+              {selectedIds.length} lead{selectedIds.length > 1 ? 's' : ''} selected
             </span>
 
-            <div className="h-4 w-[1px] bg-slate-800" />
+            <div className="h-4 w-px bg-slate-700" />
 
             <div className="flex items-center gap-2">
               <div className="relative">
                 <button 
                   onClick={() => setBulkStatusOpen(!bulkStatusOpen)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-200 flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-slate-200 flex items-center gap-1.5 transition-colors"
                 >
                   <span>Update Status</span>
                   <ChevronRight size={12} className={`transform transition-transform ${bulkStatusOpen ? 'rotate-90' : ''}`} />
                 </button>
 
                 {bulkStatusOpen && (
-                  <div className="absolute bottom-11 right-0 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl py-1 z-50 flex flex-col w-36">
-                    {['New', 'Contacted', 'Qualified', 'Converted', 'Lost'].map(status => (
+                  <div className="absolute bottom-full mb-2 left-0 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-xl py-1 z-50 flex flex-col w-36">
+                    {['Contacted', 'Converted', 'Lost', 'New', 'Qualified'].map(status => (
                       <button
                         key={status}
                         onClick={() => handleBulkStatusUpdate(status as LeadStatus)}
-                        className="px-4 py-2 text-xs text-left hover:bg-slate-800 text-slate-350 hover:text-white"
+                        className="px-4 py-2 text-xs text-left hover:bg-orange-50 hover:text-orange-600 text-gray-700 transition-colors"
                       >
                         {status}
                       </button>
@@ -546,7 +661,7 @@ const Leads: React.FC = () => {
 
               <button
                 onClick={handleBulkDelete}
-                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-750 text-white flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-500 text-white flex items-center gap-1.5 transition-colors"
               >
                 <Trash size={12} />
                 <span>Delete</span>
@@ -563,7 +678,8 @@ const Leads: React.FC = () => {
             setEditLead(null);
             setModalOpen(true);
           }}
-          className="w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full flex items-center justify-center shadow-2xl shadow-indigo-650/40 active:scale-95 transition-transform"
+          className="w-14 h-14 text-white rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-transform"
+          style={{ backgroundColor: '#ff7a59' }}
         >
           <UserPlus size={22} />
         </button>

@@ -54,9 +54,8 @@ const Customers: React.FC = () => {
     <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 dark:border-slate-800 pb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight flex items-center gap-2">
-            <ShieldCheck className="text-emerald-500" size={20} />
-            <span>Converted Customers</span>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+            Converted Customers
           </h1>
           <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
             Accounts converted from qualified leads that are successfully won

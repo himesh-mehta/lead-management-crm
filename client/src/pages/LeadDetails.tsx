@@ -171,16 +171,6 @@ const LeadDetails: React.FC = () => {
             <Trash2 size={13} />
             <span>Delete</span>
           </button>
-
-          {lead.status !== 'Converted' && (
-            <button
-              onClick={() => handleStatusChange('Converted')}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md active:scale-95 transition-all"
-            >
-              <ShieldCheck size={14} />
-              <span>Convert Lead</span>
-            </button>
-          )}
         </div>
       </div>
 
@@ -255,98 +245,201 @@ const LeadDetails: React.FC = () => {
         <div className="space-y-6">
           
           {/* Quick status transition controls */}
-          <div className="p-6 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
-            <h3 className="text-sm font-bold text-gray-950 dark:text-white mb-4">Pipeline Status Transition</h3>
+          <div className="p-5 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
+            <h3 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-4">Pipeline Status</h3>
             
-            <div className="grid grid-cols-1 gap-2.5">
+            {/* Vertical stepper */}
+            <div className="relative">
               {[
-                { status: 'New', color: 'hover:border-blue-500 hover:text-blue-500' },
-                { status: 'Contacted', color: 'hover:border-amber-500 hover:text-amber-500' },
-                { status: 'Qualified', color: 'hover:border-purple-500 hover:text-purple-500' },
-                { status: 'Converted', color: 'hover:border-emerald-500 hover:text-emerald-500' },
-                { status: 'Lost', color: 'hover:border-red-500 hover:text-red-500' },
-              ].map(item => {
+                { status: 'New' as LeadStatus,       color: '#3b82f6', bg: 'bg-blue-500',    ring: 'ring-blue-200',    label: 'New Lead',       sub: 'Contact registered' },
+                { status: 'Contacted' as LeadStatus, color: '#f59e0b', bg: 'bg-amber-500',   ring: 'ring-amber-200',   label: 'Contacted',      sub: 'Outreach initiated' },
+                { status: 'Qualified' as LeadStatus, color: '#8b5cf6', bg: 'bg-purple-500',  ring: 'ring-purple-200',  label: 'Qualified',      sub: 'Budget confirmed' },
+                { status: 'Converted' as LeadStatus, color: '#10b981', bg: 'bg-emerald-500', ring: 'ring-emerald-200', label: 'Converted',      sub: 'Deal won 🎉' },
+                { status: 'Lost' as LeadStatus,      color: '#ef4444', bg: 'bg-red-500',     ring: 'ring-red-200',     label: 'Lost',           sub: 'Deal closed-lost' },
+              ].map((item, idx, arr) => {
                 const isActive = lead.status === item.status;
+                const isLast   = idx === arr.length - 1;
                 return (
-                  <button
-                    key={item.status}
-                    onClick={() => handleStatusChange(item.status as LeadStatus)}
-                    className={`px-4 py-2.5 rounded-xl border text-xs font-semibold transition-all text-left flex items-center justify-between ${
-                      isActive 
-                        ? 'border-indigo-500 bg-indigo-50/10 text-indigo-650 dark:text-indigo-400 font-bold'
-                        : `border-gray-150 dark:border-slate-800 text-gray-600 dark:text-slate-450 bg-transparent ${item.color}`
-                    }`}
-                  >
-                    <span>{item.status}</span>
-                    {isActive && <ShieldCheck size={14} />}
-                  </button>
+                  <div key={item.status} className="relative flex gap-3">
+                    {/* Connector line */}
+                    {!isLast && (
+                      <div
+                        className="absolute left-[13px] top-7 w-0.5 bottom-0"
+                        style={{ backgroundColor: isActive || lead.status === arr[idx + 1]?.status ? item.color + '40' : '#e5e7eb' }}
+                      />
+                    )}
+
+                    {/* Step indicator */}
+                    <button
+                      onClick={() => handleStatusChange(item.status)}
+                      className={`relative z-10 flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all mt-0.5 ${
+                        isActive
+                          ? `${item.bg} ring-4 ${item.ring} shadow-md`
+                          : 'bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      <span className={`text-[10px] font-extrabold ${ isActive ? 'text-white' : 'text-gray-400 dark:text-slate-500' }`}>
+                        {idx + 1}
+                      </span>
+                    </button>
+
+                    {/* Label block */}
+                    <button
+                      onClick={() => handleStatusChange(item.status)}
+                      className={`flex-1 flex flex-col text-left py-1.5 mb-3 px-3 rounded-xl transition-all ${
+                        isActive
+                          ? 'bg-gray-50 dark:bg-slate-800/60 border border-gray-150 dark:border-slate-700'
+                          : 'hover:bg-gray-50 dark:hover:bg-slate-800/40'
+                      }`}
+                    >
+                      <span className={`text-xs font-bold ${ isActive ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-slate-400' }`}>
+                        {item.label}
+                      </span>
+                      <span className="text-[10px] text-gray-400 dark:text-slate-500 font-medium mt-0.5">
+                        {item.sub}
+                      </span>
+                    </button>
+                  </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Firmographic Company Information */}
-          <div className="p-6 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft space-y-4">
-            <h3 className="text-sm font-bold text-gray-955 dark:text-white flex items-center gap-2">
-              <Building2 size={16} className="text-gray-400" />
-              <span>Firmographics</span>
-            </h3>
+          {/* Company Information */}
+          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
+            {/* Card header bar */}
+            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850">
+              <div className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center">
+                <Building2 size={13} className="text-indigo-500" />
+              </div>
+              <h3 className="text-xs font-bold text-gray-800 dark:text-white tracking-wide">Company Information</h3>
+            </div>
 
-            <div className="space-y-3.5 text-xs">
-              <div className="flex items-center gap-3">
-                <Globe size={15} className="text-gray-450" />
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Corporate Site</p>
-                  <a href={`https://${companyInfo.domain}`} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline dark:text-indigo-400">
+            {/* Rows */}
+            <div className="divide-y divide-gray-100 dark:divide-slate-800">
+              {/* Company name */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+                  <Building2 size={13} className="text-slate-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Company Name</p>
+                  <p className="text-xs font-semibold text-gray-800 dark:text-slate-200 truncate mt-0.5">{lead.company}</p>
+                </div>
+              </div>
+
+              {/* Corporate site */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 flex items-center justify-center flex-shrink-0">
+                  <Globe size={13} className="text-blue-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Corporate Site</p>
+                  <a
+                    href={`https://${companyInfo.domain}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-orange-500 hover:text-orange-600 hover:underline font-medium mt-0.5 block truncate"
+                    onClick={e => e.stopPropagation()}
+                  >
                     {companyInfo.domain}
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Building2 size={15} className="text-gray-455" />
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Company Size</p>
-                  <p className="text-gray-700 dark:text-slate-300">{companyInfo.employees}</p>
+              {/* Company size */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950 flex items-center justify-center flex-shrink-0">
+                  <Users size={13} className="text-purple-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Company Size</p>
+                  <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{companyInfo.employees}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Award size={15} className="text-gray-450" />
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Funding Round</p>
-                  <p className="text-gray-700 dark:text-slate-300">{companyInfo.funding}</p>
+              {/* Funding round */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950 flex items-center justify-center flex-shrink-0">
+                  <Award size={13} className="text-amber-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Funding Round</p>
+                  <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{companyInfo.funding}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Calendar size={15} className="text-gray-450" />
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Registered Location</p>
-                  <p className="text-gray-700 dark:text-slate-300">{companyInfo.location}</p>
+              {/* Location */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center flex-shrink-0">
+                  <MapPin size={13} className="text-emerald-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Location</p>
+                  <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{companyInfo.location}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Contact coordinates list */}
-          <div className="p-6 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft space-y-4">
-            <h3 className="text-sm font-bold text-gray-950 dark:text-white">Contact Info</h3>
-            
-            <div className="space-y-3.5 text-xs">
-              <div className="flex items-center gap-3">
-                <Mail size={15} className="text-gray-400" />
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Direct Email</p>
-                  <a href={`mailto:${lead.email}`} className="text-indigo-650 dark:text-indigo-400 hover:underline">{lead.email}</a>
+          {/* Contact Details */}
+          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
+            {/* Card header bar */}
+            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850">
+              <div className="w-6 h-6 rounded-lg bg-orange-50 dark:bg-orange-950 flex items-center justify-center">
+                <Phone size={13} className="text-orange-500" />
+              </div>
+              <h3 className="text-xs font-bold text-gray-800 dark:text-white tracking-wide">Contact Details</h3>
+            </div>
+
+            <div className="divide-y divide-gray-100 dark:divide-slate-800">
+              {/* Email */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center flex-shrink-0">
+                  <Mail size={13} className="text-indigo-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Email Address</p>
+                  <a href={`mailto:${lead.email}`} className="text-xs text-orange-500 hover:underline font-medium mt-0.5 block truncate">
+                    {lead.email}
+                  </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Phone size={15} className="text-gray-400" />
-                <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Direct Phone</p>
-                  <a href={`tel:${lead.phone}`} className="text-indigo-650 dark:text-indigo-400 hover:underline">{lead.phone}</a>
+              {/* Phone */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-950 flex items-center justify-center flex-shrink-0">
+                  <Phone size={13} className="text-green-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Phone Number</p>
+                  <a href={`tel:${lead.phone}`} className="text-xs text-orange-500 hover:underline font-medium mt-0.5 block">
+                    {lead.phone}
+                  </a>
+                </div>
+              </div>
+
+              {/* Lead Source */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950 flex items-center justify-center flex-shrink-0">
+                  <Globe size={13} className="text-sky-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lead Source</p>
+                  <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-slate-300">
+                    {lead.source || 'Web'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Registered */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950 flex items-center justify-center flex-shrink-0">
+                  <Calendar size={13} className="text-rose-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Registered On</p>
+                  <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{formatDate(lead.createdAt)}</p>
                 </div>
               </div>
             </div>
