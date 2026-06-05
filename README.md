@@ -1,10 +1,10 @@
-# LeadFlow CRM 🚀
+# LeadBridge CRM 🚀
 
 A modern, fast, responsive Lead Management CRM designed with a premium dark SaaS theme. Built using Node.js + Express on the backend, Neon Serverless PostgreSQL with raw SQL queries on the database layer, and React + Vite + Tailwind CSS on the frontend.
 
 ## 🔗 Deployed Links & Visuals
-- **Live Demo Link:** `https://leadflow-crm.vercel.app` *(Placeholder)*
-- **API Server Endpoint:** `https://leadflow-api.railway.app` *(Placeholder)*
+- **Live Demo Link:** `https://leadbridge-crm.vercel.app` *(Placeholder)*
+- **API Server Endpoint:** `https://leadbridge-api.railway.app` *(Placeholder)*
 
 *Mock Screenshot: [Premium Dark Dashboard](https://raw.githubusercontent.com/himesh-mehta/lead-management-crm/main/screenshot.png)*
 
