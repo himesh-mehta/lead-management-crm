@@ -19,6 +19,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
     status: 'New' as LeadStatus,
     source: 'Web',
     notes: '',
+    gender: 'Male' as 'Male' | 'Female',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -34,6 +35,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
         status: initialData.status || 'New',
         source: initialData.source || 'Web',
         notes: initialData.notes || '',
+        gender: (initialData.gender as 'Male' | 'Female') || 'Male',
       });
     } else {
       setFormData({
@@ -44,6 +46,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
         status: 'New',
         source: 'Web',
         notes: '',
+        gender: 'Male',
       });
     }
     setErrors({});
