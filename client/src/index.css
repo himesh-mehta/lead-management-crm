@@ -20,15 +20,6 @@
     --info: 59, 130, 246; /* #3B82F6 */
     --purple: 139, 92, 246; /* #8B5CF6 */
   }
-
-  .dark {
-    --bg-main: 11, 15, 25; /* #0B0F19 Deep Slate */
-    --bg-card: 17, 24, 39; /* #111827 Slate Gray */
-    --bg-sidebar: 15, 21, 33; /* #0F1521 */
-    --border-color: 31, 41, 55; /* #1F2937 */
-    --text-primary: 243, 244, 246; /* #F3F4F6 */
-    --text-secondary: 156, 163, 175; /* #9CA3AF */
-  }
   
   *, *::before, *::after {
     font-family: 'Inter', sans-serif;

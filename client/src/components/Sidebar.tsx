@@ -3,13 +3,17 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
-  Building2,
   BarChart3,
   Settings,
   X,
   ShieldCheck,
   ChevronRight,
 } from 'lucide-react';
+
+interface SidebarProps {
+  isOpen: boolean;
+  toggleSidebar: () => void;
+}
 
 const sections = [
   {
@@ -29,7 +33,7 @@ const sections = [
   }
 ];
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   return (
     <>
       {/* Mobile background overlay */}
@@ -40,10 +44,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         />
       )}
 
-      {/* Sidebar sidebar container */}
       <aside
         style={{ width: 260 }}
-        className={`fixed top-0 bottom-0 left-0 z-55 flex flex-col h-full glass-sidebar transition-transform duration-300 ease-in-out md:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col h-full glass-sidebar transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

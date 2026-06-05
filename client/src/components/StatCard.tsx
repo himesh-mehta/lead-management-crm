@@ -1,5 +1,15 @@
 import React from 'react';
+import { LucideIcon } from 'lucide-react';
 import { ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react';
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  growth?: string;
+  trend?: 'up' | 'down' | 'neutral';
+  icon?: LucideIcon;
+  color?: 'indigo' | 'green' | 'orange' | 'red' | 'blue';
+}
 
 const colorVariants = {
   indigo: {
@@ -29,12 +39,11 @@ const colorVariants = {
   },
 };
 
-const StatCard = ({ title, value, growth, trend = 'neutral', icon: Icon, color = 'indigo' }) => {
+const StatCard: React.FC<StatCardProps> = ({ title, value, growth, trend = 'neutral', icon: Icon, color = 'indigo' }) => {
   const variant = colorVariants[color] || colorVariants.indigo;
 
   return (
     <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 shadow-soft glass-panel-hover flex flex-col justify-between h-32 relative overflow-hidden transition-all duration-300">
-      
       {/* Upper Section */}
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 tracking-wide">
@@ -61,7 +70,7 @@ const StatCard = ({ title, value, growth, trend = 'neutral', icon: Icon, color =
               ? 'text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30' 
               : trend === 'down'
                 ? 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/30'
-                : 'text-gray-600 bg-gray-50 dark:text-slate-400 dark:bg-slate-850'
+                : 'text-gray-650 bg-gray-50 dark:text-slate-450 dark:bg-slate-850'
           }`}>
             {trend === 'up' && <ArrowUpRight size={11} />}
             {trend === 'down' && <ArrowDownRight size={11} />}

@@ -1,4 +1,7 @@
 const pool = require('../config/db');
+const { db } = require('../db');
+const { leads } = require('../db/schema');
+const { eq, ilike, or, and, sql, desc } = require('drizzle-orm');
 
 // ─── Email Validation ─────────────────────────────────────────────────────────
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -16,10 +19,18 @@ const initLeadsTable = async () => {
         company     VARCHAR(255) NOT NULL,
         status      VARCHAR(50)  NOT NULL DEFAULT 'New'
                     CHECK (status IN ('New', 'Contacted', 'Qualified', 'Converted', 'Lost')),
+        source      VARCHAR(100) DEFAULT 'Web',
         notes       TEXT DEFAULT '',
+        gender      VARCHAR(50) DEFAULT 'Male',
         created_at  TIMESTAMP DEFAULT NOW(),
         updated_at  TIMESTAMP DEFAULT NOW()
       );
+    `);
+
+    // Add source and gender columns if table already exists without them
+    await client.query(`
+      ALTER TABLE leads ADD COLUMN IF NOT EXISTS source VARCHAR(100) DEFAULT 'Web';
+      ALTER TABLE leads ADD COLUMN IF NOT EXISTS gender VARCHAR(50) DEFAULT 'Male';
     `);
 
     await client.query(`
@@ -47,19 +58,15 @@ const initLeadsTable = async () => {
       $$;
     `);
 
-    console.log('✅ Leads table ready');
+    console.log('✅ Leads table ready with source column');
   } finally {
     client.release();
   }
 };
 
 // ─── createLead ───────────────────────────────────────────────────────────────
-/**
- * Insert a new lead into the database.
- * @param {{ name, email, phone, company, status?, notes? }} data
- */
 const createLead = async (data) => {
-  const { name, email, phone, company, status = 'New', notes = '' } = data;
+  const { name, email, phone, company, status = 'New', source = 'Web', notes = '', gender = 'Male' } = data;
 
   // Validate required fields
   if (!name || !email || !phone || !company) {
@@ -76,60 +83,51 @@ const createLead = async (data) => {
     throw err;
   }
 
-  const { rows } = await pool.query(
-    `INSERT INTO leads (name, email, phone, company, status, notes)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     RETURNING *`,
-    [name.trim(), normalizedEmail, phone.trim(), company.trim(), status, notes]
-  );
+  const rows = await db.insert(leads).values({
+    name: name.trim(),
+    email: normalizedEmail,
+    phone: phone.trim(),
+    company: company.trim(),
+    status,
+    source,
+    notes,
+    gender,
+  }).returning();
 
   return rows[0];
 };
 
 // ─── findAllLeads ─────────────────────────────────────────────────────────────
-/**
- * Paginated list of leads with optional status filter and sorting.
- * @param {{ page?, limit?, status?, sort? }} options
- */
 const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at' } = {}) => {
   const offset = (page - 1) * limit;
 
-  // Whitelist sort columns to prevent SQL injection
+  // Whitelist sort columns
   const allowedSorts = ['created_at', 'updated_at', 'name', 'company', 'status'];
   const sortColumn = allowedSorts.includes(sort) ? sort : 'created_at';
 
-  let query, countQuery, params, countParams;
-
+  // Build filters
+  let conditions = [];
   if (status) {
-    query = `
-      SELECT * FROM leads
-      WHERE status = $1
-      ORDER BY ${sortColumn} DESC
-      LIMIT $2 OFFSET $3
-    `;
-    countQuery = `SELECT COUNT(*) FROM leads WHERE status = $1`;
-    params = [status, limit, offset];
-    countParams = [status];
-  } else {
-    query = `
-      SELECT * FROM leads
-      ORDER BY ${sortColumn} DESC
-      LIMIT $1 OFFSET $2
-    `;
-    countQuery = `SELECT COUNT(*) FROM leads`;
-    params = [limit, offset];
-    countParams = [];
+    conditions.push(eq(leads.status, status));
   }
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-  const [{ rows: leads }, { rows: countRows }] = await Promise.all([
-    pool.query(query, params),
-    pool.query(countQuery, countParams),
+  // Order logic
+  let orderClause = desc(leads.createdAt);
+  if (sortColumn === 'name') orderClause = desc(leads.name);
+  else if (sortColumn === 'company') orderClause = desc(leads.company);
+  else if (sortColumn === 'status') orderClause = desc(leads.status);
+  else if (sortColumn === 'updated_at') orderClause = desc(leads.updatedAt);
+
+  const [leadsList, countRows] = await Promise.all([
+    db.select().from(leads).where(whereClause).orderBy(orderClause).limit(limit).offset(offset),
+    db.select({ count: sql`count(*)` }).from(leads).where(whereClause),
   ]);
 
-  const total = parseInt(countRows[0].count, 10);
+  const total = parseInt(countRows[0].count || 0, 10);
 
   return {
-    leads,
+    leads: leadsList,
     pagination: {
       total,
       page: parseInt(page, 10),
@@ -140,127 +138,99 @@ const findAllLeads = async ({ page = 1, limit = 10, status, sort = 'created_at' 
 };
 
 // ─── findLeadById ─────────────────────────────────────────────────────────────
-/**
- * Find a single lead by its ID.
- * @param {number|string} id
- */
 const findLeadById = async (id) => {
-  const { rows } = await pool.query(
-    `SELECT * FROM leads WHERE id = $1`,
-    [id]
-  );
+  const rows = await db.select().from(leads).where(eq(leads.id, parseInt(id, 10)));
   return rows[0] || null;
 };
 
 // ─── updateLeadById ───────────────────────────────────────────────────────────
-/**
- * Partially update a lead — only provided fields are updated.
- * @param {number|string} id
- * @param {object} data
- */
 const updateLeadById = async (id, data) => {
-  const allowedFields = ['name', 'email', 'phone', 'company', 'status', 'notes'];
-  const updates = [];
-  const values = [];
-  let paramIndex = 1;
+  const allowedFields = ['name', 'email', 'phone', 'company', 'status', 'source', 'notes', 'gender'];
+  const updateData = {};
 
   for (const field of allowedFields) {
     if (data[field] !== undefined) {
-      // Normalize email if being updated
-      const value = field === 'email'
-        ? data[field].toLowerCase().trim()
-        : data[field];
-
-      if (field === 'email' && !EMAIL_REGEX.test(value)) {
-        const err = new Error('Invalid email format');
-        err.statusCode = 400;
-        throw err;
+      let value = data[field];
+      if (field === 'email') {
+        value = value.toLowerCase().trim();
+        if (!EMAIL_REGEX.test(value)) {
+          const err = new Error('Invalid email format');
+          err.statusCode = 400;
+          throw err;
+        }
       }
-
-      updates.push(`${field} = $${paramIndex}`);
-      values.push(value);
-      paramIndex++;
+      updateData[field] = value;
     }
   }
 
-  if (updates.length === 0) {
+  if (Object.keys(updateData).length === 0) {
     const err = new Error('No valid fields provided for update');
     err.statusCode = 400;
     throw err;
   }
 
-  values.push(id); // last param is the WHERE id = $N
-
-  const { rows } = await pool.query(
-    `UPDATE leads
-     SET ${updates.join(', ')}
-     WHERE id = $${paramIndex}
-     RETURNING *`,
-    values
-  );
+  const rows = await db.update(leads)
+    .set(updateData)
+    .where(eq(leads.id, parseInt(id, 10)))
+    .returning();
 
   return rows[0] || null;
 };
 
 // ─── deleteLeadById ───────────────────────────────────────────────────────────
-/**
- * Delete a lead by ID and return the deleted record.
- * @param {number|string} id
- */
 const deleteLeadById = async (id) => {
-  const { rows } = await pool.query(
-    `DELETE FROM leads WHERE id = $1 RETURNING *`,
-    [id]
-  );
+  const rows = await db.delete(leads)
+    .where(eq(leads.id, parseInt(id, 10)))
+    .returning();
   return rows[0] || null;
 };
 
 // ─── searchLeads ──────────────────────────────────────────────────────────────
-/**
- * Full-text search across name, email, and company (case-insensitive).
- * @param {string} q - search term
- */
 const searchLeads = async (q) => {
   if (!q || q.trim() === '') return [];
 
   const pattern = `%${q.trim()}%`;
 
-  const { rows } = await pool.query(
-    `SELECT * FROM leads
-     WHERE name    ILIKE $1
-        OR email   ILIKE $1
-        OR company ILIKE $1
-     ORDER BY created_at DESC`,
-    [pattern]
-  );
-
-  return rows;
+  return db.select().from(leads)
+    .where(
+      or(
+        ilike(leads.name, pattern),
+        ilike(leads.email, pattern),
+        ilike(leads.company, pattern),
+        ilike(leads.phone, pattern)
+      )
+    )
+    .orderBy(desc(leads.createdAt));
 };
 
 // ─── getLeadStats ─────────────────────────────────────────────────────────────
-/**
- * Aggregate stats: total, by status, this month, conversion rate.
- */
 const getLeadStats = async () => {
   const [totalRes, byStatusRes, thisMonthRes, convertedRes] = await Promise.all([
-    pool.query(`SELECT COUNT(*) AS total FROM leads`),
-    pool.query(`SELECT status, COUNT(*) AS count FROM leads GROUP BY status ORDER BY count DESC`),
-    pool.query(`
-      SELECT COUNT(*) AS count FROM leads
-      WHERE DATE_TRUNC('month', created_at) = DATE_TRUNC('month', NOW())
-    `),
-    pool.query(`SELECT COUNT(*) AS count FROM leads WHERE status = 'Converted'`),
+    db.select({ count: sql`count(*)` }).from(leads),
+    db.select({ status: leads.status, count: sql`count(*)` }).from(leads).groupBy(leads.status),
+    db.select({ count: sql`count(*)` }).from(leads).where(
+      sql`date_trunc('month', ${leads.createdAt}) = date_trunc('month', now())`
+    ),
+    db.select({ count: sql`count(*)` }).from(leads).where(eq(leads.status, 'Converted')),
   ]);
 
-  const total       = parseInt(totalRes.rows[0].total, 10);
-  const thisMonth   = parseInt(thisMonthRes.rows[0].count, 10);
-  const converted   = parseInt(convertedRes.rows[0].count, 10);
+  const total = parseInt(totalRes[0]?.count || 0, 10);
+  const thisMonth = parseInt(thisMonthRes[0]?.count || 0, 10);
+  const converted = parseInt(convertedRes[0]?.count || 0, 10);
 
-  // Build status breakdown as a keyed object
-  const byStatus = {};
-  for (const row of byStatusRes.rows) {
-    byStatus[row.status] = parseInt(row.count, 10);
-  }
+  const byStatus = {
+    New: 0,
+    Contacted: 0,
+    Qualified: 0,
+    Converted: 0,
+    Lost: 0,
+  };
+
+  byStatusRes.forEach((row) => {
+    if (row.status) {
+      byStatus[row.status] = parseInt(row.count, 10);
+    }
+  });
 
   const conversionRate = total > 0
     ? ((converted / total) * 100).toFixed(1)

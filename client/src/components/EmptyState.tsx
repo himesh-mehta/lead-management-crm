@@ -1,9 +1,21 @@
 import React from 'react';
 import { Sparkles, Plus } from 'lucide-react';
 
-const EmptyState = ({ title = 'No leads found', description = 'Get started by creating your first lead in the directory.', onActionClick }) => {
+interface EmptyStateProps {
+  title?: string;
+  description?: string;
+  onActionClick?: () => void;
+  actionText?: string;
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({ 
+  title = 'No leads found', 
+  description = 'Get started by creating your first lead in the directory.', 
+  onActionClick,
+  actionText = 'Add Your First Lead'
+}) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center p-8 py-16 rounded-2xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-soft animate-fade-in">
+    <div className="flex flex-col items-center justify-center text-center p-8 py-16 rounded-2xl bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 shadow-soft animate-fade-in w-full">
       {/* Decorative Icon Wrapper */}
       <div className="relative mb-5 flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">
         <Sparkles size={28} className="animate-pulse" />
@@ -28,7 +40,7 @@ const EmptyState = ({ title = 'No leads found', description = 'Get started by cr
           className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-[0.98] transition-all"
         >
           <Plus size={16} />
-          <span>Add Your First Lead</span>
+          <span>{actionText}</span>
         </button>
       )}
     </div>
