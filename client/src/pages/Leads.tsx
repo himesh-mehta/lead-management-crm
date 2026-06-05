@@ -425,10 +425,10 @@ const Leads: React.FC = () => {
                 return (
                   <div 
                     key={lead.id}
-                    className={`p-5 rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-pointer ${
+                    className={`p-5 rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer ${
                       isChecked 
                         ? 'border-indigo-500 bg-indigo-50/5 dark:bg-indigo-950/10' 
-                        : 'border-gray-150 bg-white dark:border-slate-800 dark:bg-slate-900 hover:border-indigo-400 dark:hover:border-slate-700 shadow-soft'
+                        : 'border-gray-150 bg-white dark:border-slate-800 dark:bg-slate-900 hover:border-indigo-500/40 dark:hover:border-indigo-500/30 shadow-soft'
                     }`}
                   >
                     <div className="flex justify-between items-start">

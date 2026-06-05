@@ -5,9 +5,9 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { createLead, getLeads } from '../services/api';
-import { LeadStatus } from '../types';
+import { LeadStatus, Lead } from '../types';
 
-const MOCK_LEADS = [
+const MOCK_LEADS: Omit<Lead, 'id' | 'createdAt'>[] = [
   { name: 'Sarah Connor', email: 'sarah@resistance.net', phone: '+1 (555) 198-4202', company: 'Cyberdyne Systems', status: 'Contacted' as LeadStatus, source: 'Web', notes: 'Interested in structural security assessments and monitoring logs.', gender: 'Female' },
   { name: 'Bruce Wayne', email: 'bruce@wayne.corp', phone: '+1 (555) 911-3948', company: 'Wayne Enterprises', status: 'Converted' as LeadStatus, source: 'Referral', notes: 'Interested in bulk contract for defense gear. Transformed to won deal.', gender: 'Male' },
   { name: 'Clark Kent', email: 'clark@dailyplanet.press', phone: '+1 (555) 438-1920', company: 'Daily Planet', status: 'New' as LeadStatus, source: 'Web', notes: 'Inquired about digital subscription models and ad placements.', gender: 'Male' },
