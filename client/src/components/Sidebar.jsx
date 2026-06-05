@@ -1,68 +1,152 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, UserPlus, BarChart3, Bolt, X } from 'lucide-react';
+import { LayoutDashboard, Users, UserPlus, BarChart2, X } from 'lucide-react';
+
+const navItems = [
+  { name: 'Dashboard',  path: '/',           icon: LayoutDashboard, end: true  },
+  { name: 'All Leads',  path: '/leads',       icon: Users,           end: false },
+  { name: 'Add Lead',   path: '/add-lead',    icon: UserPlus,        end: false },
+  { name: 'Statistics', path: '/statistics',  icon: BarChart2,       end: false },
+];
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Leads', path: '/leads', icon: Users },
-    { name: 'Add Lead', path: '/add-lead', icon: UserPlus },
-    { name: 'Statistics', path: '/statistics', icon: BarChart3 },
-  ];
-
   return (
     <>
-      {/* Mobile Sidebar Overlay */}
+      {/* Mobile overlay */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm md:hidden transition-opacity duration-300"
+        <div
+          className="fixed inset-0 z-40 bg-black/30 md:hidden"
           onClick={toggleSidebar}
         />
       )}
 
-      {/* Sidebar Container */}
-      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-slate-800 border-r border-slate-700 p-5 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:h-screen ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
-        <div className="flex items-center justify-between pb-6 mb-6 border-b border-slate-700">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-indigo-650 rounded-lg text-white shadow-lg shadow-indigo-650/20">
-              <Bolt size={20} className="animate-pulse text-indigo-200" />
+      {/* Sidebar panel */}
+      <aside
+        style={{
+          width: 256,
+          background: '#FFFFFF',
+          borderRight: '1px solid #E2E8F0',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 30,
+          transform: isOpen ? 'translateX(0)' : undefined,
+          transition: 'transform 0.25s ease',
+        }}
+        className={`md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+      >
+        {/* ── Logo ── */}
+        <div
+          style={{
+            padding: '24px 20px',
+            borderBottom: '1px solid #F1F5F9',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {/* Logo box */}
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                background: '#4F46E5',
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 16, lineHeight: 1 }}>
+                L
+              </span>
             </div>
-            <span className="text-xl font-bold tracking-tight text-slate-100">LeadFlow CRM</span>
+            {/* Logo text */}
+            <span style={{ fontSize: 16, lineHeight: 1 }}>
+              <span style={{ fontWeight: 700, color: '#0F172A' }}>LeadFlow</span>
+              <span style={{ fontWeight: 700, color: '#4F46E5' }}> CRM</span>
+            </span>
           </div>
-          <button 
+
+          {/* Close button (mobile only) */}
+          <button
             onClick={toggleSidebar}
-            className="p-1 text-slate-400 hover:text-slate-200 md:hidden focus:outline-none focus:ring-2 focus:ring-slate-600 rounded-md"
+            className="md:hidden"
+            style={{
+              color: '#94A3B8',
+              padding: 4,
+              borderRadius: 6,
+              border: 'none',
+              background: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.name}
-                to={item.path}
-                onClick={() => {
-                  if (window.innerWidth < 768) toggleSidebar();
-                }}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 ${
-                    isActive
-                      ? 'bg-indigo-650 text-white shadow-lg shadow-indigo-650/30'
-                      : 'text-slate-405 hover:bg-slate-700 hover:text-slate-100'
-                  }`
-                }
-              >
-                <Icon size={18} />
-                <span>{item.name}</span>
-              </NavLink>
-            );
-          })}
+        {/* ── Navigation ── */}
+        <nav style={{ padding: '16px 12px', flex: 1 }}>
+          {/* Section label */}
+          <p
+            style={{
+              fontSize: 10,
+              fontWeight: 600,
+              color: '#94A3B8',
+              letterSpacing: '0.08em',
+              padding: '0 8px',
+              marginBottom: 4,
+              textTransform: 'uppercase',
+            }}
+          >
+            Main Menu
+          </p>
+
+          {navItems.map(({ name, path, icon: Icon, end }) => (
+            <NavLink
+              key={path}
+              to={path}
+              end={end}
+              onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}
+              style={({ isActive }) => ({
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '10px 12px',
+                borderRadius: 8,
+                marginBottom: 2,
+                fontSize: 14,
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? '#4F46E5' : '#64748B',
+                background: isActive ? '#EEF2FF' : 'transparent',
+                textDecoration: 'none',
+                transition: 'all 0.15s ease',
+              })}
+              className={({ isActive }) =>
+                isActive ? '' : 'hover:bg-[#F8FAFC] hover:!text-[#0F172A]'
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon size={18} color={isActive ? '#4F46E5' : 'currentColor'} />
+                  <span>{name}</span>
+                </>
+              )}
+            </NavLink>
+          ))}
         </nav>
+
+        {/* ── Bottom version tag ── */}
+        <div style={{ padding: 20 }}>
+          <p style={{ fontSize: 11, color: '#CBD5E1', margin: 0 }}>v1.0.0</p>
+        </div>
       </aside>
     </>
   );

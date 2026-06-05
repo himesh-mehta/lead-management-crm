@@ -7,38 +7,38 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title = "Confirm Action", me
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none">
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm transition-opacity"
+      <div
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Box */}
       <div className="relative w-full max-w-md mx-auto p-4 z-50">
-        <div className="relative bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden">
+        <div className="relative bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-slate-700">
-            <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+          <div className="flex items-center justify-between p-5 border-b border-gray-100">
+            <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
               <AlertTriangle className="text-red-500 h-5 w-5" />
               {title}
             </h3>
-            <button 
+            <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-200 transition-colors"
+              className="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-100"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
 
           {/* Body */}
           <div className="p-6">
-            <p className="text-sm text-slate-300 leading-relaxed">{message}</p>
+            <p className="text-sm text-gray-500 leading-relaxed">{message}</p>
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 px-6 py-4 bg-slate-850 border-t border-slate-700">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-100">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-700 text-slate-200 hover:bg-slate-600 transition-colors"
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
             >
               Cancel
             </button>
@@ -47,9 +47,9 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title = "Confirm Action", me
                 onConfirm();
                 onClose();
               }}
-              className="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-500 transition-colors"
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors duration-200"
             >
-              Confirm
+              Delete
             </button>
           </div>
         </div>

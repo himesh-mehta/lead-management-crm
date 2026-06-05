@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit2, Trash2, UserPlus, Filter, RefreshCw, EyeOff, Plus } from 'lucide-react';
+import { Edit2, Trash2, UserPlus, Filter, RefreshCw, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { deleteLead, searchLeads } from '../services/api';
+import { deleteLead } from '../services/api';
 import useLeads from '../hooks/useLeads';
 import StatusBadge from '../components/StatusBadge';
 import SearchBar from '../components/SearchBar';
@@ -59,36 +59,39 @@ const Leads = () => {
   };
 
   return (
-    <div className="space-y-6 p-6 max-w-7xl mx-auto animate-fade-in">
-      {/* Header */}
+    <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
+      {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Leads Directory</h1>
-          <p className="text-sm text-slate-400">Total registered leads: <span className="text-indigo-400 font-bold">{total}</span></p>
+          <h1 className="text-2xl font-bold text-gray-900">Leads Directory</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Total registered leads:{' '}
+            <span className="text-indigo-600 font-bold">{total}</span>
+          </p>
         </div>
         <button
           onClick={() => navigate('/leads/add')}
-          className="bg-indigo-650 hover:bg-indigo-600 text-white font-semibold text-sm px-4.5 py-2.5 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 shadow-lg shadow-indigo-650/15 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-4 py-2.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors duration-200 self-start sm:self-auto focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           <UserPlus size={16} />
           Add New Lead
         </button>
       </div>
 
-      {/* Filter Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-center bg-slate-800 p-4 border border-slate-700 rounded-xl shadow-md">
+      {/* Filter Toolbar */}
+      <div className="flex flex-col md:flex-row gap-3 items-center bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
         <div className="w-full md:flex-1">
           <SearchBar value={searchTerm} onChange={handleSearchChange} />
         </div>
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="relative w-full md:w-48">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <Filter size={16} />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <Filter size={15} />
             </div>
             <select
               value={statusFilter}
               onChange={handleStatusFilterChange}
-              className="block w-full pl-9 pr-4 py-2 border border-slate-700 rounded-lg bg-slate-900 text-slate-150 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="block w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-150"
             >
               <option value="">All Statuses</option>
               <option value="New">New</option>
@@ -100,79 +103,92 @@ const Leads = () => {
           </div>
           <button
             onClick={() => refetch()}
-            className="p-2.5 border border-slate-700 bg-slate-900 hover:bg-slate-750 text-slate-350 hover:text-slate-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-650"
+            className="p-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-500 hover:text-gray-700 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             title="Refresh directory"
           >
-            <RefreshCw size={18} />
+            <RefreshCw size={17} />
           </button>
         </div>
       </div>
 
-      {/* Leads List Grid */}
-      <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-xl overflow-hidden">
+      {/* Leads Table Container */}
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
         {loading ? (
           <div className="p-8">
             <LoadingSkeleton rows={6} />
           </div>
         ) : leads.length === 0 ? (
           <div className="py-20 text-center flex flex-col items-center justify-center p-6">
-            <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-full text-slate-500 mb-4">
-              <Plus size={32} className="text-slate-405" />
+            <div className="p-4 bg-gray-100 border border-gray-200 rounded-full text-gray-400 mb-4">
+              <Users size={32} />
             </div>
-            <h3 className="text-lg font-bold text-slate-200">No Leads Found</h3>
-            <p className="text-sm text-slate-400 mt-1 max-w-sm">
+            <h3 className="text-lg font-bold text-gray-900">No Leads Found</h3>
+            <p className="text-sm text-gray-500 mt-1 max-w-sm">
               Start expanding your customer pool. Register a lead by pressing the button below.
             </p>
             <button
               onClick={() => navigate('/leads/add')}
-              className="mt-6 bg-indigo-650 hover:bg-indigo-600 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               Add New Lead
             </button>
           </div>
         ) : (
           <>
-            {/* Tablet & Desktop View */}
+            {/* Desktop / Tablet Table View */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-slate-900/40 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-700">
+                  <tr className="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
                     <th className="px-6 py-4">Name</th>
                     <th className="px-6 py-4">Company</th>
-                    <th className="px-6 py-4">Email</th>
                     <th className="px-6 py-4 hidden md:table-cell">Phone</th>
                     <th className="px-6 py-4">Status</th>
                     <th className="px-6 py-4 hidden lg:table-cell">Created At</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700/50">
+                <tbody>
                   {leads.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-slate-750/30 transition-colors text-slate-200 text-sm">
-                      <td className="px-6 py-4 font-semibold text-slate-100">{lead.name}</td>
-                      <td className="px-6 py-4 text-slate-350">{lead.company}</td>
-                      <td className="px-6 py-4 text-slate-400">{lead.email}</td>
-                      <td className="px-6 py-4 text-slate-450 hidden md:table-cell">{lead.phone}</td>
+                    <tr
+                      key={lead.id}
+                      className="hover:bg-gray-50 transition-colors duration-150 text-sm border-b border-gray-100 last:border-b-0"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-semibold text-xs flex items-center justify-center flex-shrink-0">
+                            {lead.name?.charAt(0)?.toUpperCase() || '?'}
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">{lead.name}</p>
+                            <p className="text-gray-500 text-xs mt-0.5">{lead.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-700">{lead.company}</td>
+                      <td className="px-6 py-4 text-gray-700 hidden md:table-cell">{lead.phone}</td>
                       <td className="px-6 py-4">
                         <StatusBadge status={lead.status} />
                       </td>
-                      <td className="px-6 py-4 text-slate-500 hidden lg:table-cell">{formatDate(lead.created_at)}</td>
+                      <td className="px-6 py-4 text-gray-400 hidden lg:table-cell">{formatDate(lead.created_at)}</td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => navigate(`/leads/edit/${lead.id}`)}
-                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-755 rounded-lg transition-all"
+                            className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-200"
+                            title="Edit lead"
                           >
-                            <Edit2 size={16} />
+                            <Edit2 size={15} />
                           </button>
                           <button
                             onClick={() => {
                               setDeleteId(lead.id);
                               setDeleteOpen(true);
                             }}
-                            className="p-1.5 text-slate-400 hover:text-red-405 hover:bg-slate-755 rounded-lg transition-all"
+                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                            title="Delete lead"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={15} />
                           </button>
                         </div>
                       </td>
@@ -183,24 +199,29 @@ const Leads = () => {
             </div>
 
             {/* Mobile Cards View */}
-            <div className="block sm:hidden divide-y divide-slate-700/50">
+            <div className="block sm:hidden divide-y divide-gray-100">
               {leads.map((lead) => (
-                <div key={lead.id} className="p-4 hover:bg-slate-750/10 transition-colors space-y-3">
+                <div key={lead.id} className="p-4 hover:bg-gray-50 transition-colors duration-150 space-y-3">
                   <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-100">{lead.name}</h4>
-                      <p className="text-xs text-slate-400 mt-0.5">{lead.company}</p>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-semibold text-xs flex items-center justify-center flex-shrink-0">
+                        {lead.name?.charAt(0)?.toUpperCase() || '?'}
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-900">{lead.name}</h4>
+                        <p className="text-xs text-gray-500 mt-0.5">{lead.company}</p>
+                      </div>
                     </div>
                     <StatusBadge status={lead.status} />
                   </div>
-                  <div className="text-xs text-slate-400 space-y-1">
+                  <div className="text-xs text-gray-500 space-y-1 pl-10">
                     <p>{lead.email}</p>
                     <p>{lead.phone}</p>
                   </div>
-                  <div className="flex items-center justify-end gap-3 pt-2">
+                  <div className="flex items-center justify-end gap-2 pt-1">
                     <button
                       onClick={() => navigate(`/leads/edit/${lead.id}`)}
-                      className="px-3 py-1.5 text-xs font-semibold border border-slate-700 bg-slate-900 rounded-md text-slate-300 flex items-center gap-1 hover:bg-slate-750"
+                      className="px-3 py-1.5 text-xs font-semibold border border-gray-300 bg-white rounded-lg text-gray-700 flex items-center gap-1 hover:bg-gray-50 transition-colors duration-200"
                     >
                       <Edit2 size={12} />
                       Edit
@@ -210,7 +231,7 @@ const Leads = () => {
                         setDeleteId(lead.id);
                         setDeleteOpen(true);
                       }}
-                      className="px-3 py-1.5 text-xs font-semibold border border-red-900 bg-red-950/20 text-red-400 rounded-md flex items-center gap-1 hover:bg-red-900/10"
+                      className="px-3 py-1.5 text-xs font-semibold border border-red-200 bg-red-50 text-red-600 rounded-lg flex items-center gap-1 hover:bg-red-100 transition-colors duration-200"
                     >
                       <Trash2 size={12} />
                       Delete

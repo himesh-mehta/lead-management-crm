@@ -44,21 +44,20 @@ const Stats = () => {
         setLoading(false);
       }
     };
-
     fetchStats();
   }, []);
 
   if (loading) {
     return (
-      <div className="space-y-6 p-6 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-slate-100">Pipeline Statistics</h1>
+      <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-900">Pipeline Statistics</h1>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <div className="h-28 bg-slate-800 border border-slate-700 animate-pulse rounded-lg"></div>
-          <div className="h-28 bg-slate-800 border border-slate-700 animate-pulse rounded-lg"></div>
-          <div className="h-28 bg-slate-800 border border-slate-700 animate-pulse rounded-lg"></div>
-          <div className="h-28 bg-slate-800 border border-slate-700 animate-pulse rounded-lg"></div>
+          <div className="h-28 bg-gray-200 animate-pulse rounded-xl" />
+          <div className="h-28 bg-gray-200 animate-pulse rounded-xl" />
+          <div className="h-28 bg-gray-200 animate-pulse rounded-xl" />
+          <div className="h-28 bg-gray-200 animate-pulse rounded-xl" />
         </div>
-        <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl">
+        <div className="bg-white border border-gray-200 p-6 rounded-xl">
           <LoadingSkeleton rows={5} />
         </div>
       </div>
@@ -70,7 +69,7 @@ const Stats = () => {
   const lostLeads = stats?.byStatus?.Lost || 0;
   const conversionRate = stats?.conversionRate || '0.0%';
 
-  const statusData = stats?.byStatus 
+  const statusData = stats?.byStatus
     ? Object.keys(stats.byStatus).map((status) => ({
         name: status,
         value: stats.byStatus[status],
@@ -88,12 +87,12 @@ const Stats = () => {
 
   if (totalLeads === 0) {
     return (
-      <div className="space-y-8 p-6 max-w-7xl mx-auto min-h-[70vh] flex flex-col items-center justify-center text-center">
-        <div className="p-4 bg-slate-800 border border-slate-700 rounded-full text-slate-500 mb-6">
-          <HelpCircle size={40} className="text-slate-405" />
+      <div className="space-y-8 p-4 sm:p-6 max-w-7xl mx-auto min-h-[70vh] flex flex-col items-center justify-center text-center">
+        <div className="p-5 bg-gray-100 border border-gray-200 rounded-full text-gray-400 mb-4">
+          <HelpCircle size={40} />
         </div>
-        <h1 className="text-2xl font-bold text-slate-100">No Data Available Yet</h1>
-        <p className="text-sm text-slate-400 mt-2 max-w-md">
+        <h1 className="text-2xl font-bold text-gray-900">No Data Available Yet</h1>
+        <p className="text-sm text-gray-500 mt-2 max-w-md">
           Pipeline analytics will automatically generate once you register leads. Go ahead and add some leads to populate the charts.
         </p>
       </div>
@@ -101,83 +100,86 @@ const Stats = () => {
   }
 
   return (
-    <div className="space-y-8 p-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="space-y-8 p-4 sm:p-6 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Pipeline Statistics</h1>
-        <p className="text-sm text-slate-400">Real-time aggregate data and pipeline analytics</p>
+        <h1 className="text-2xl font-bold text-gray-900">Pipeline Statistics</h1>
+        <p className="text-sm text-gray-500 mt-1">Real-time aggregate data and pipeline analytics</p>
       </div>
 
-      {/* Responsive Grid for cards */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <StatCard 
-          title="Total Leads" 
-          value={totalLeads} 
-          icon={Users} 
-          color="indigo" 
-          subtitle="All active contacts" 
+        <StatCard
+          title="Total Leads"
+          value={totalLeads}
+          icon={Users}
+          color="indigo"
+          subtitle="All active contacts"
         />
-        <StatCard 
-          title="Converted" 
-          value={convertedLeads} 
-          icon={UserCheck} 
-          color="green" 
-          subtitle="Successfully won" 
+        <StatCard
+          title="Converted"
+          value={convertedLeads}
+          icon={UserCheck}
+          color="green"
+          subtitle="Successfully won"
         />
-        <StatCard 
-          title="Lost Leads" 
-          value={lostLeads} 
-          icon={UserX} 
-          color="red" 
-          subtitle="Closed lost deals" 
+        <StatCard
+          title="Lost Leads"
+          value={lostLeads}
+          icon={UserX}
+          color="red"
+          subtitle="Closed lost deals"
         />
-        <StatCard 
-          title="Conversion Rate" 
-          value={conversionRate} 
-          icon={TrendingUp} 
-          color="blue" 
-          subtitle="Won leads percentage" 
+        <StatCard
+          title="Conversion Rate"
+          value={conversionRate}
+          icon={TrendingUp}
+          color="blue"
+          subtitle="Won leads percentage"
         />
       </div>
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Pie Chart */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6 shadow-xl">
-          <h3 className="text-xs md:text-sm font-bold text-slate-100 mb-6 uppercase tracking-wider">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-sm font-semibold text-gray-900 mb-6">
             Lead Distribution by Status
           </h3>
-          <div className="h-64 md:h-80">
+          <div className="h-64 md:h-72">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={statusData}
                   cx="50%"
                   cy="45%"
-                  innerRadius={50}
-                  outerRadius={75}
+                  innerRadius={55}
+                  outerRadius={80}
                   paddingAngle={3}
                   dataKey="value"
                 >
                   {statusData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={STATUS_COLORS[entry.name] || '#64748b'} 
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={STATUS_COLORS[entry.name] || '#6366f1'}
                     />
                   ))}
                 </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1e293b', 
-                    borderColor: '#334155',
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
                     borderRadius: '8px',
-                    color: '#f1f5f9'
+                    color: '#111827',
+                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
                   }}
                 />
-                <Legend 
+                <Legend
                   verticalAlign="bottom"
                   height={36}
                   iconType="circle"
-                  formatter={(value) => <span className="text-slate-350 text-xs font-semibold">{value}</span>}
+                  formatter={(value) => (
+                    <span style={{ color: '#6b7280', fontSize: '12px', fontWeight: 600 }}>{value}</span>
+                  )}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -185,38 +187,41 @@ const Stats = () => {
         </div>
 
         {/* Bar Chart */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6 shadow-xl">
-          <h3 className="text-xs md:text-sm font-bold text-slate-100 mb-6 uppercase tracking-wider">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <h3 className="text-sm font-semibold text-gray-900 mb-6">
             Monthly Performance (Leads Added)
           </h3>
-          <div className="h-64 md:h-80">
+          <div className="h-64 md:h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis 
-                  dataKey="name" 
-                  stroke="#94a3b8" 
-                  fontSize={11} 
-                  tickLine={false} 
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis
+                  dataKey="name"
+                  stroke="#9ca3af"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
                 />
-                <YAxis 
-                  stroke="#94a3b8" 
-                  fontSize={11} 
-                  tickLine={false} 
+                <YAxis
+                  stroke="#9ca3af"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
                 />
                 <Tooltip
-                  contentStyle={{ 
-                    backgroundColor: '#1e293b', 
-                    borderColor: '#334155',
+                  contentStyle={{
+                    backgroundColor: '#ffffff',
+                    borderColor: '#e5e7eb',
                     borderRadius: '8px',
-                    color: '#f1f5f9'
+                    color: '#111827',
+                    boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
                   }}
-                  cursor={{ fill: 'rgba(51, 65, 85, 0.2)' }}
+                  cursor={{ fill: 'rgba(99, 102, 241, 0.05)' }}
                 />
-                <Bar 
-                  dataKey="count" 
-                  fill="#6366f1" 
-                  radius={[4, 4, 0, 0]} 
+                <Bar
+                  dataKey="count"
+                  fill="#6366f1"
+                  radius={[4, 4, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
