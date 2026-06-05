@@ -57,14 +57,33 @@ const App: React.FC = () => {
   const toastOptions = {
     duration: 3500,
     style: {
-      background: 'rgba(15, 23, 42, 0.95)',
-      color: '#ffffff',
-      border: '1px solid rgba(255, 255, 255, 0.05)',
-      borderRadius: '12px',
+      background: '#ffffff',
+      color: '#1e293b',
+      border: '1px solid #f1f5f9',
+      borderRadius: '16px',
       fontSize: '13px',
-      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15)',
-      backdropFilter: 'blur(8px)',
+      fontWeight: '600',
+      boxShadow: '0 10px 40px -10px rgba(0,0,0,0.08)',
+      padding: '12px 20px',
     },
+    success: {
+      iconTheme: {
+        primary: '#10b981',
+        secondary: '#ffffff',
+      },
+      style: {
+        borderLeft: '4px solid #10b981',
+      }
+    },
+    error: {
+      iconTheme: {
+        primary: '#ef4444',
+        secondary: '#ffffff',
+      },
+      style: {
+        borderLeft: '4px solid #ef4444',
+      }
+    }
   };
 
   if (isNotFound) {
@@ -73,7 +92,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <Toaster position="top-right" toastOptions={toastOptions} />
+        <Toaster position="bottom-right" toastOptions={toastOptions} />
       </>
     );
   }
@@ -92,7 +111,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AppLayout>
-      <Toaster position="top-right" toastOptions={toastOptions} />
+      <Toaster position="bottom-right" toastOptions={toastOptions} />
     </>
   );
 };

@@ -67,7 +67,7 @@ export const useUpdateLeadMutation = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      queryClient.invalidateQueries({ queryKey: ['lead', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['lead', String(variables.id)] });
     },
   });
 };
@@ -79,7 +79,7 @@ export const useDeleteLeadMutation = () => {
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       queryClient.invalidateQueries({ queryKey: ['stats'] });
-      queryClient.invalidateQueries({ queryKey: ['lead', id] });
+      queryClient.invalidateQueries({ queryKey: ['lead', String(id)] });
     },
   });
 };

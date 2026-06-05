@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Mail, Phone, Building2, Globe, Calendar, MessageSquare,
-  Edit2, Trash2, ShieldCheck, HelpCircle, Clock, Send, Award
+  Edit2, Trash2, ShieldCheck, HelpCircle, Clock, Send, Award, Users, MapPin
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLeadDetailsQuery, useUpdateLeadMutation, useDeleteLeadMutation } from '../hooks/useLeads';
@@ -85,8 +85,8 @@ const LeadDetails: React.FC = () => {
   };
 
   // Handle Note submit
-  const handleNoteSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleNoteSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!newNote.trim()) return;
 
     const newEntry: NoteEntry = {
@@ -175,34 +175,40 @@ const LeadDetails: React.FC = () => {
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         
         {/* Left column: notes timelines */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Notes Form */}
-          <div className="p-6 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <div className="p-5 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
               <MessageSquare size={16} className="text-indigo-500" />
               <span>Log Client Communication</span>
             </h3>
 
-            <form onSubmit={handleNoteSubmit} className="space-y-3">
+            <form onSubmit={handleNoteSubmit} className="relative">
               <textarea
                 value={newNote}
                 onChange={(e) => setNewNote(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleNoteSubmit();
+                  }
+                }}
                 placeholder="Log outcome of discovery calls, budget negotiations, follow-ups..."
-                rows={3}
-                className="w-full px-4 py-3 border border-gray-200 dark:border-slate-850 rounded-xl text-xs bg-transparent text-gray-800 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 resize-none"
+                rows={2}
+                className="w-full px-4 py-3 pb-11 border border-gray-200 dark:border-slate-850 rounded-xl text-xs bg-transparent text-gray-800 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 resize-none"
               />
-              <div className="flex justify-end">
+              <div className="absolute bottom-2 right-2">
                 <button
                   type="submit"
                   disabled={!newNote.trim() || updateMutation.isPending}
-                  className="px-4 py-2 text-xs font-semibold text-white bg-indigo-650 hover:bg-indigo-700 disabled:opacity-50 rounded-xl flex items-center gap-1.5 transition-all"
+                  className="px-3 py-1.5 text-xs font-semibold text-white bg-indigo-650 hover:bg-indigo-700 disabled:opacity-50 rounded-lg flex items-center gap-1.5 transition-all shadow-sm"
                 >
                   <Send size={12} />
-                  <span>Log Note</span>
+                  <span>Save</span>
                 </button>
               </div>
             </form>
@@ -212,37 +218,102 @@ const LeadDetails: React.FC = () => {
           <div className="p-6 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
             <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-6">Notes & Interactions Timeline</h3>
             
-            <div className="relative border-l border-gray-100 dark:border-slate-850 pl-5 ml-2.5 space-y-6">
-              {notesTimeline.map((note, index) => (
-                <div key={index} className="relative text-xs">
-                  <span className="absolute -left-[23.5px] top-1.5 flex h-4 w-4 rounded-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 items-center justify-center">
-                    <Clock size={10} className="text-gray-400" />
-                  </span>
+            <div className="max-h-[400px] overflow-y-auto pr-2">
+              <div className="relative border-l border-gray-100 dark:border-slate-850 pl-5 ml-2.5 space-y-6">
+                {notesTimeline.map((note, index) => (
+                  <div key={index} className="relative text-xs">
+                    <span className="absolute -left-[23.5px] top-1.5 flex h-4 w-4 rounded-full bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 items-center justify-center">
+                      <Clock size={10} className="text-gray-400" />
+                    </span>
 
-                  <div>
-                    <div className="flex justify-between items-center text-gray-450 dark:text-slate-450 mb-1">
-                      <span className="font-semibold text-gray-750 dark:text-slate-350">Timeline Entry</span>
-                      <span className="text-[10px]">{formatDate(note.date)}</span>
-                    </div>
-                    <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-850 border border-gray-100 dark:border-slate-800/80 text-gray-800 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
-                      {note.text}
+                    <div>
+                      <div className="flex justify-between items-center text-gray-450 dark:text-slate-450 mb-1">
+                        <span className="font-semibold text-gray-750 dark:text-slate-350">Timeline Entry</span>
+                        <span className="text-[10px]">{formatDate(note.date)}</span>
+                      </div>
+                      <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-850 border border-gray-100 dark:border-slate-800/80 text-gray-800 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                        {note.text}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {notesTimeline.length === 0 && (
-                <div className="py-8 text-center text-gray-400">
-                  No interaction notes registered. Use the panel above to log your first call.
+                {notesTimeline.length === 0 && (
+                  <div className="py-8 text-center text-gray-400">
+                    No interaction notes registered. Use the panel above to log your first call.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Details */}
+          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
+            {/* Card header bar */}
+            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850">
+              <div className="w-6 h-6 rounded-lg bg-orange-50 dark:bg-orange-950 flex items-center justify-center">
+                <Phone size={13} className="text-orange-500" />
+              </div>
+              <h3 className="text-xs font-bold text-gray-800 dark:text-white tracking-wide">Contact Details</h3>
+            </div>
+
+            <div className="divide-y divide-gray-100 dark:divide-slate-800">
+              {/* Email */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center flex-shrink-0">
+                  <Mail size={13} className="text-indigo-500" />
                 </div>
-              )}
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Email Address</p>
+                  <a href={`mailto:${lead.email}`} className="text-xs text-orange-500 hover:underline font-medium mt-0.5 block truncate">
+                    {lead.email}
+                  </a>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-950 flex items-center justify-center flex-shrink-0">
+                  <Phone size={13} className="text-green-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Phone Number</p>
+                  <a href={`tel:${lead.phone}`} className="text-xs text-orange-500 hover:underline font-medium mt-0.5 block">
+                    {lead.phone}
+                  </a>
+                </div>
+              </div>
+
+              {/* Lead Source */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950 flex items-center justify-center flex-shrink-0">
+                  <Globe size={13} className="text-sky-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lead Source</p>
+                  <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-slate-300">
+                    {lead.source || 'Web'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Registered */}
+              <div className="flex items-center gap-3 px-5 py-3.5">
+                <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950 flex items-center justify-center flex-shrink-0">
+                  <Calendar size={13} className="text-rose-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Registered On</p>
+                  <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{formatDate(lead.createdAt)}</p>
+                </div>
+              </div>
             </div>
           </div>
 
         </div>
 
-        {/* Right column: firmographics and pipeline control */}
-        <div className="space-y-6">
+        {/* Right column: pipeline + company */}
+        <div className="lg:col-span-2 space-y-5">
           
           {/* Quick status transition controls */}
           <div className="p-5 bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft">
@@ -381,73 +452,9 @@ const LeadDetails: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Contact Details */}
-          <div className="bg-white dark:bg-slate-900 border border-gray-150 dark:border-slate-800 rounded-2xl shadow-soft overflow-hidden">
-            {/* Card header bar */}
-            <div className="px-5 py-3.5 border-b border-gray-100 dark:border-slate-800 flex items-center gap-2 bg-gray-50/60 dark:bg-slate-850">
-              <div className="w-6 h-6 rounded-lg bg-orange-50 dark:bg-orange-950 flex items-center justify-center">
-                <Phone size={13} className="text-orange-500" />
-              </div>
-              <h3 className="text-xs font-bold text-gray-800 dark:text-white tracking-wide">Contact Details</h3>
-            </div>
-
-            <div className="divide-y divide-gray-100 dark:divide-slate-800">
-              {/* Email */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
-                <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center flex-shrink-0">
-                  <Mail size={13} className="text-indigo-500" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Email Address</p>
-                  <a href={`mailto:${lead.email}`} className="text-xs text-orange-500 hover:underline font-medium mt-0.5 block truncate">
-                    {lead.email}
-                  </a>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
-                <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-950 flex items-center justify-center flex-shrink-0">
-                  <Phone size={13} className="text-green-500" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Phone Number</p>
-                  <a href={`tel:${lead.phone}`} className="text-xs text-orange-500 hover:underline font-medium mt-0.5 block">
-                    {lead.phone}
-                  </a>
-                </div>
-              </div>
-
-              {/* Lead Source */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
-                <div className="w-7 h-7 rounded-lg bg-sky-50 dark:bg-sky-950 flex items-center justify-center flex-shrink-0">
-                  <Globe size={13} className="text-sky-500" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Lead Source</p>
-                  <span className="inline-block mt-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-slate-300">
-                    {lead.source || 'Web'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Registered */}
-              <div className="flex items-center gap-3 px-5 py-3.5">
-                <div className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950 flex items-center justify-center flex-shrink-0">
-                  <Calendar size={13} className="text-rose-500" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Registered On</p>
-                  <p className="text-xs text-gray-700 dark:text-slate-300 mt-0.5">{formatDate(lead.createdAt)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
-
       </div>
+
 
       {/* Edit lead modal */}
       <LeadModal

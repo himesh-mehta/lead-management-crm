@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
                     </h4>
                   </div>
                 ) : idx > 0 ? (
-                  <div className="border-t border-slate-100 dark:border-slate-800/80 my-4 mx-2" />
+                  <div className="border-t-2 border-gray-200 dark:border-slate-700 my-4 mx-3" />
                 ) : null}
 
                 <div className="space-y-0.5">
