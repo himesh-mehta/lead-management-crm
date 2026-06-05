@@ -99,30 +99,53 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
-      {/* Backdrop overlay */}
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+    /* Outer — covers full screen, centers modal */
+    <div
+      style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '60px 16px 16px' }}
+    >
+      {/* Backdrop */}
+      <div
+        style={{ position: 'fixed', inset: 0, background: 'rgba(30,30,40,0.45)' }}
         onClick={onClose}
       />
 
-      {/* Modal Box Container */}
-      <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-gray-150 animate-scale-in flex flex-col max-h-[90vh]">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
-          <h2 className="text-base font-semibold text-gray-900">
+      {/* Modal box — never taller than the viewport */}
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '512px',
+          maxHeight: 'calc(100vh - 76px)',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#fff',
+          borderRadius: '16px',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.2)',
+          border: '1px solid #f0f0f0',
+        }}
+      >
+        {/* Header — never scrolls away */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #f3f4f6', flexShrink: 0 }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', margin: 0 }}>
             {initialData ? 'Edit Lead' : 'Add New Lead'}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-850 transition-colors"
+            style={{ padding: '6px', borderRadius: '8px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#9ca3af', display: 'flex', alignItems: 'center' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#f3f4f6')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
           >
             <X size={18} />
           </button>
         </div>
 
-        {/* Scrollable Form contents */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5 overflow-y-auto flex-1">
+        {/* Scrollable body — min-height:0 is REQUIRED for flex+overflow to work */}
+        <form
+          id="lead-modal-form"
+          onSubmit={handleSubmit}
+          style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto', flex: 1, minHeight: 0 }}
+        >
+
           {/* Full Name */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400 mb-1.5">
@@ -362,31 +385,35 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit, initia
             </div>
           </div>
 
-          {/* Footer controls — sticky at modal bottom */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 flex-shrink-0">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-gray-700 bg-gray-50 dark:bg-slate-800 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-5 py-2 text-xs font-semibold text-white rounded-xl shadow-md active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-75"
-              style={{ backgroundColor: '#ff7a59' }}
-              onMouseEnter={e => !loading && ((e.currentTarget as HTMLButtonElement).style.backgroundColor = '#e5431c')}
-              onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.backgroundColor = '#ff7a59')}
-            >
-              {loading && <Loader2 size={14} className="animate-spin" />}
-              <span>{loading ? 'Processing...' : initialData ? 'Update Lead' : 'Create Lead'}</span>
-            </button>
-          </div>
         </form>
+
+        {/* Footer — always visible, never scrolls */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', padding: '14px 24px', borderTop: '1px solid #f3f4f6', flexShrink: 0, borderRadius: '0 0 16px 16px', background: '#fff' }}>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{ padding: '8px 16px', fontSize: '12px', fontWeight: 600, color: '#374151', background: '#f3f4f6', border: 'none', borderRadius: '10px', cursor: 'pointer' }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#e5e7eb')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#f3f4f6')}
+          >
+            Cancel
+          </button>
+          <button
+            form="lead-modal-form"
+            type="submit"
+            disabled={loading}
+            style={{ padding: '8px 20px', fontSize: '12px', fontWeight: 700, color: '#fff', background: '#ff7a59', border: 'none', borderRadius: '10px', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 12px rgba(255,122,89,0.3)' }}
+            onMouseEnter={e => !loading && ((e.currentTarget as HTMLButtonElement).style.background = '#e5431c')}
+            onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.background = '#ff7a59')}
+          >
+            {loading && <Loader2 size={14} className="animate-spin" />}
+            <span>{loading ? 'Processing...' : initialData ? 'Update Lead' : 'Create Lead'}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default LeadModal;
+
