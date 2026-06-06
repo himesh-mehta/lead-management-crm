@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(clientBuildPath));
 
   // Serve the SPA html root entry point for frontend routes
-  app.get('*', (req, res) => {
+  app.get('*splat', (req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 } else {
