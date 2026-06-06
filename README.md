@@ -1,46 +1,53 @@
 # LeadBridge CRM 🚀
 
-A modern, fast, responsive Lead Management CRM designed with a premium dark SaaS theme. Built using Node.js + Express on the backend, Neon Serverless PostgreSQL with raw SQL queries on the database layer, and React + Vite + Tailwind CSS on the frontend.
+A modern, highly visual Lead Management CRM designed with a responsive, premium dashboard interface featuring brand orange (`#ff7a59`) highlights. 
 
-## 🔗 Deployed Links & Visuals
-- **Live Demo Link:** `https://leadbridge-crm.vercel.app` *(Placeholder)*
-- **API Server Endpoint:** `https://leadbridge-api.railway.app` *(Placeholder)*
+This full-stack system is powered by a **Node.js + Express** server, **Drizzle ORM** communicating with **Neon Serverless PostgreSQL**, and a **React + Vite + TypeScript** frontend styled with Tailwind CSS and visualised using customized **Recharts** curves and glassmorphic micro-interactions.
 
-*Mock Screenshot: [Premium Dark Dashboard](https://raw.githubusercontent.com/himesh-mehta/lead-management-crm/main/screenshot.png)*
+---
+
+## 🔗 Live Deployed Links
+
+- **Live Application (Frontend):** [https://lead-management-crm-omega.vercel.app](https://lead-management-crm-omega.vercel.app)
+- **API Server Endpoint (Backend):** [https://lead-management-crm-x26w.onrender.com](https://lead-management-crm-x26w.onrender.com)
+- **API Health Endpoint:** [https://lead-management-crm-x26w.onrender.com/health](https://lead-management-crm-x26w.onrender.com/health)
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend
-- **Core:** Node.js, Express.js
-- **Database:** Neon PostgreSQL (Serverless Cloud Postgres)
-- **Database Driver:** `@neondatabase/serverless` & `pg` (node-postgres)
-- **Validation:** `express-validator`
-- **Config & DevTools:** `dotenv`, `cors`, `nodemon`
+### Frontend (Client SPA)
+- **Framework & Bundler:** React.js, Vite, TypeScript
+- **Styling & Transitions:** Tailwind CSS (v4 compatible), Framer Motion
+- **Data Visualizations:** Recharts (Area, Donut, Horizontal Bar, Spline Line, Stacked Bar)
+- **Routing:** React Router DOM (v6)
+- **HTTP Client & Hooks:** Axios, TanStack React Query (v5)
+- **Utility Libraries:** Lucide React, React Hot Toast, jsPDF, html2canvas
 
-### Frontend
-- **Bundler & Framework:** Vite, React.js
-- **Styling:** Tailwind CSS (v4 compatible PostCSS setup)
-- **Charts & Visualization:** Recharts
-- **Icons:** Lucide React
-- **Toast Notifications:** React Hot Toast
-- **Router:** React Router DOM (v6)
-- **HTTP Client:** Axios
+### Backend (REST API Server)
+- **Runtime & Framework:** Node.js, Express.js (v5)
+- **Database Layer:** Neon Serverless PostgreSQL
+- **Object-Relational Mapping (ORM):** Drizzle ORM
+- **Migration Engine:** Drizzle-Kit
+- **Auth Systems:** JWT (JSON Web Tokens) with header interceptors, Bcrypt.js password hashing
+- **Development & Config:** Dotenv, CORS, Express Validator, Nodemon
 
 ---
 
 ## ✨ Features
-- 📊 **Interactive Dashboard:** Quick overview of pipeline analytics (Total Leads, Conversion Rate, Closed Won, Active Leads) and a table of the 5 most recently created leads.
-- 📋 **Lead Directory Grid:** Fully responsive table displaying lead profiles. Auto-converts to a grid of details cards on smaller mobile layouts.
-- 🔍 **Real-Time Live Search:** Search instantly across lead names, companies, and emails.
-- 🎛️ **Granular Filtering:** Filter the pipeline by status (`New`, `Contacted`, `Qualified`, `Converted`, `Lost`).
-- 📈 **SaaS Visualization Panel:** Dark-themed Recharts diagrams displaying:
-  - Lead distribution status (Donut/Pie Chart)
-  - Monthly lead intake volume (Bar Chart)
-- 📝 **Validation Form:** Fully responsive validator forms checking inputs, email schemas, and mandatory values before dispatching API writes.
-- ⚠️ **Confirmative Modals:** Intercepts deletions with safety prompt modals.
-- 🎨 **Responsive UI/UX:** Mobile sliding navigation sidebar drawer, focus rings, custom SVG favicon, and smooth fade-in routing transitions.
+
+- 🔐 **Multi-User Secure Authentication:** Fully secured login, registration, and logout flows. Scopes all leads, recent activities, and statistics to the authenticated user's ID.
+- ⚡ **Instant Demo Mode:** Jump directly into the application with the "Try Demo Account" button, which logs in a sandbox user and seeds 20 diverse, realistic leads if the database is clean.
+- 📊 **Pipeline Analytics Dashboard:** Clean, cards-based overview of core KPIs (Total Opportunities, Closed Won, Closed Lost, and Conversion Rates) with mini sparklines.
+- 📈 **Premium Chart Visualizations:** Polished charts featuring brand colors, custom spline curves, rounded stacked bars, and modern glassmorphic hover tooltips:
+  - **Status Distribution:** Donut chart with an inner glass ring detailing total leads.
+  - **Monthly Growth Intake:** Orange gradient spline Area chart tracking lead signups.
+  - **Lead Source Distribution:** Horizontal rounded Bar chart resolving category label overlaps.
+  - **Revenue Pipeline Forecast:** Stacked Bar chart detailing qualified and converted values.
+  - **Lead Conversion Trend:** Spline Line chart displaying conversion rate progress.
+- 📋 **Flexible Leads Directory:** Fully paginated directory containing sorting features, search indexing (name, email, company), and status filter toggles. Converts into visual details cards automatically on mobile viewports.
+- 📄 **PDF Report Generation:** One-click canvas rendering and PDF download for all pipeline metrics, optimized for both light and dark mode capturing.
+- 📝 **Input validation:** Statically checks emails, numbers, and inputs using Express Validator rules on the API layer, and provides responsive forms on the frontend.
 
 ---
 
@@ -48,54 +55,32 @@ A modern, fast, responsive Lead Management CRM designed with a premium dark SaaS
 
 ```
 lead-management-crm/
-├── client/                     # React Frontend App
+├── client/                     # React Frontend App (Vite + TS)
 │   ├── src/
-│   │   ├── components/         # Reusable UI Components
-│   │   │   ├── SearchBar.jsx
-│   │   │   ├── StatCard.jsx
-│   │   │   ├── StatusBadge.jsx
-│   │   │   ├── Pagination.jsx
-│   │   │   ├── ConfirmModal.jsx
-│   │   │   ├── LoadingSkeleton.jsx
-│   │   │   ├── LeadForm.jsx
-│   │   │   ├── Sidebar.jsx
-│   │   │   └── Navbar.jsx
-│   │   ├── hooks/
-│   │   │   └── useLeads.js     # State hooks for Leads
-│   │   ├── pages/              # Main Route Pages
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── Leads.jsx
-│   │   │   ├── AddLead.jsx
-│   │   │   ├── EditLead.jsx
-│   │   │   ├── Stats.jsx
-│   │   │   └── NotFound.jsx
-│   │   ├── services/
-│   │   │   └── api.js          # Axios API mappings
-│   │   ├── utils/
-│   │   │   └── helpers.js      # Status badge color helpers
-│   │   ├── index.css
-│   │   ├── App.jsx
-│   │   └── main.jsx
+│   │   ├── components/         # Reusable UI components & Modals
+│   │   ├── context/            # AuthContext (JWT states & interceptors)
+│   │   ├── hooks/              # useLeads (React Query wrapper)
+│   │   ├── pages/              # Routing pages (Leads, Login, Stats, etc.)
+│   │   ├── services/           # Axios API mappings
+│   │   ├── types/              # TypeScript types
+│   │   ├── utils/              # Helper utilities
+│   │   ├── index.css           # Styling overrides & Tailwind directives
+│   │   ├── App.tsx             # Root router & auth route guards
+│   │   └── main.tsx            # React bootstrap
 │   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   ├── vercel.json             # Vercel Client Deploy Settings
+│   └── vercel.json             # Vercel SPA redirects
+├── server/                     # Express Backend REST API
+│   ├── config/                 # Neon connection pooling
+│   ├── controllers/            # Auth & Lead route handlers
+│   ├── db/                     # Drizzle schemas and migration snapshots
+│   ├── middleware/             # JWT auth validation & global error handlers
+│   ├── models/                 # Raw SQL seeding & bootstrap hooks
+│   ├── routes/                 # Express route mounts
+│   ├── Procfile                # Procfile config for deployment
+│   ├── index.js                # App bootstrap entry point
 │   └── .env
-├── server/                     # Express Backend API
-│   ├── config/
-│   │   └── db.js               # Neon Pool Configuration
-│   ├── controllers/
-│   │   └── leadController.js   # Lead Controllers
-│   ├── middleware/
-│   │   ├── errorHandler.js     # Global Error Middleware
-│   │   ├── validate.js         # express-validator triggers
-│   │   └── leadValidation.js   # Input rule validation parameters
-│   ├── models/
-│   │   └── Lead.js             # Raw SQL Query Model Functions
-│   ├── routes/
-│   │   └── leadRoutes.js       # Express Router mounting
-│   ├── Procfile                # Railway Server Launch settings
-│   ├── index.js                # App Bootstrap
-│   └── .env
+├── drizzle.config.js           # Drizzle-kit configuration
+├── package.json                # Root package dependencies (server & migrations)
 └── README.md
 ```
 
@@ -104,113 +89,102 @@ lead-management-crm/
 ## ⚙️ Local Setup Instructions
 
 ### Prerequisites
-- Node.js installed locally (v18+ recommended)
-- A database instance on [Neon.tech](https://neon.tech) (Free tier works perfectly)
+- Node.js (v18+ recommended)
+- A PostgreSQL database instance (Get a free serverless database at [Neon.tech](https://neon.tech))
 
-### 1. Clone the repository
+### 1. Clone & Install Root Dependencies
 ```bash
 git clone https://github.com/himesh-mehta/lead-management-crm.git
 cd lead-management-crm
-```
-
-### 2. Configure Backend Server
-```bash
-# Install dependencies
 npm install
-
-# Create environment config
-# Edit server/.env and add your variables (see Env Variables section below)
 ```
 
-### 3. Configure Frontend Client
+### 2. Configure Backend Environment
+Create a `.env` file inside the `server/` directory:
 ```bash
-# Navigate to client folder
-cd client
-npm install
-
-# Create environment config
-# Edit client/.env and add VITE_API_URL (see Env Variables section below)
+touch server/.env
 ```
-
-### 4. Running Locally
-Start the backend server:
-```bash
-# In the root directory
-npm run dev
-```
-
-Start the frontend client:
-```bash
-# In the client/ directory
-npm run dev
-```
-Open `http://localhost:5173` to see the application running.
-
----
-
-## 🔑 Environment Variables
-
-### Backend Server (`server/.env`)
+Add the following configuration variables:
 ```ini
-# Database Connection
+# Database Connection (Get from Neon console)
 DATABASE_URL=postgresql://user:password@ep-xxxx.neon.tech/neondb?sslmode=require
 
-# Port allocation
+# Server Port
 PORT=5000
 
 # Environment Mode
 NODE_ENV=development
 
-# Allowed CORS origins
+# JSON Web Token Secret (Paste a secure random string)
+JWT_SECRET=9e9cfa4d4b1a45749f984dfa75bfcb9958742b6a22b10a2eb7b8b2e11894dcd5
+
+# Frontend CORS Origin URL
 CLIENT_URL=http://localhost:5173
 ```
 
-### Frontend Client (`client/.env`)
+### 3. Generate & Apply Database Migrations
+We use **Drizzle ORM** and **Drizzle-kit** to automatically manage tables and types. In the root directory, run:
+```bash
+# Generate SQL migration file from server/db/schema.js
+npm run db:generate
+
+# Push migrations live to your database
+npm run db:migrate
+```
+
+### 4. Configure Frontend Environment
+Navigate to the `client/` directory and install local packages:
+```bash
+cd client
+npm install
+```
+Create a `.env` file inside the `client/` directory:
+```bash
+touch .env
+```
+Add the local API server URL:
 ```ini
-# Backend Base API URL
 VITE_API_URL=http://localhost:5000/api
 ```
+
+### 5. Running the Application
+Start the Backend Server (from the root directory):
+```bash
+npm run dev
+```
+
+Start the Frontend Dev Server (from the `client/` directory):
+```bash
+npm run dev
+```
+
+Open your browser to `http://localhost:5173` to see the application running locally!
 
 ---
 
 ## 📊 API Documentation
 
-All routes are prefixed with `/api/leads`.
+All routes are prefixed with `/api`. Auth is enforced on all `/api/leads` endpoints via `Authorization: Bearer <jwt_token>`.
 
-| Method | Endpoint | Description | Request Body | Sample Response |
-| :--- | :--- | :--- | :--- | :--- |
-| **GET** | `/` | Fetch paginated leads (sort, page, status filters) | None | `{ leads: [], total: 0, currentPage: 1, totalPages: 0, limit: 10 }` |
-| **GET** | `/search?q=x` | Instantly search name, email, company | None | `[{ id: 1, name: "Himesh Mehta", ... }]` |
-| **GET** | `/stats` | Fetch aggregated pipeline statistics | None | `{ stats: { total: 1, thisMonth: 1, conversionRate: "0.0%", byStatus: { New: 1 } } }` |
-| **GET** | `/:id` | Fetch details of a single lead | None | `{ lead: { id: 1, name: "John Doe", ... } }` |
-| **POST** | `/` | Add a new lead to the pipeline | `{ name, email, phone, company, status, notes }` | `{ message: "Lead created successfully", lead: { ... } }` |
-| **PUT** | `/:id` | Partially update details of a lead | `{ name, status, notes, ... }` | `{ message: "Lead updated successfully", lead: { ... } }` |
-| **DELETE** | `/:id` | Permanently delete a lead from directory | None | `{ message: "Lead deleted successfully", lead: { ... } }` |
+### Authentication Routes (`/api/auth`)
+| Method | Endpoint | Description | Request Body |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/signup` | Create a new user account | `{ name, email, password }` |
+| **POST** | `/signin` | Login to account and get JWT | `{ email, password }` |
+| **POST** | `/demo` | Login as Sandbox user (seeds leads if empty) | None |
 
----
-
-## 🚀 Deployment Guide
-
-### Backend: Deploying to Railway
-1. Sign up on [Railway](https://railway.app/).
-2. Click **New Project** → **Deploy from GitHub repo** → Choose your `lead-management-crm` repository.
-3. Add the following **Variables** under project settings:
-   - `DATABASE_URL` *(Your Neon Connection String)*
-   - `NODE_ENV` = `production`
-   - `PORT` = `5000`
-4. Railway will auto-detect the `server/Procfile` and start the server process.
-
-### Frontend: Deploying to Vercel
-1. Sign up on [Vercel](https://vercel.com/).
-2. Select **Add New Project** → Choose your repository.
-3. Configure the directory settings:
-   - **Framework Preset**: `Vite`
-   - **Root Directory**: `client`
-4. Set the **Environment Variables**:
-   - `VITE_API_URL` = `https://your-railway-app.railway.app/api`
-5. Press **Deploy**. The `client/vercel.json` rewrite configuration handles React Router SPAs automatically.
+### Lead Routes (`/api/leads`)
+| Method | Endpoint | Description | Request Body / Query |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/` | Fetch paginated, filtered leads | `?page=1&limit=10&status=New` |
+| **GET** | `/search` | Live search names, emails, companies | `?q=search_term` |
+| **GET** | `/stats` | Fetch parsed pipeline metrics & charts data | None |
+| **GET** | `/:id` | Fetch specific lead details | None |
+| **POST** | `/` | Add a new lead to the pipeline | `{ name, email, phone, company, status, source, notes, gender, estimatedValue }` |
+| **PUT** | `/:id` | Update lead properties | `{ name, status, estimatedValue, ... }` |
+| **DELETE** | `/:id` | Delete lead from the database | None |
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
